@@ -1,0 +1,19 @@
+{
+  "name": "eventor",
+  "version": "1.0.0",
+  "description": "A PhoneGap Hello World template",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "leaflet": "^1.0.3",
+    "leaflet-routing-machine": "^3.2.5",
+    "sweetalert2": "^6.3.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

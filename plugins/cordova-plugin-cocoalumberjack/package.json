@@ -1,0 +1,35 @@
+{
+  "name": "cordova-plugin-cocoalumberjack",
+  "version": "0.0.3",
+  "description": "Cordova wrapper for iOS CocoaLumberjack logging framework",
+  "cordova": {
+    "id": "cordova-plugin-cocoalumberjack",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/transistorsoft/cordova-plugin-cocoalumberjack"
+  },
+  "keywords": [
+    "logging",
+    "cordova",
+    "cocoa lumberjack",
+    "ecosystem:cordova",
+    "cordova-ios",
+    "phonegap"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": "Chris Scott, Transistor Software",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/transistorsoft/cordova-plugin-cocoalumberjack/issues"
+  },
+  "homepage": "https://github.com/transistorsoft/cordova-cocoalumberjack#README"
+}

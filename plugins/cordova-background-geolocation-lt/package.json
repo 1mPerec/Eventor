@@ -1,0 +1,42 @@
+{
+  "name": "cordova-background-geolocation-lt",
+  "version": "2.5.1",
+  "description": "Cordova Background Geolocation.  The most sophisticated, cross-platform location-tracking and geofencing plugin.",
+  "cordova": {
+    "id": "cordova-background-geolocation-lt",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/transistorsoft/cordova-background-geolocation-lt"
+  },
+  "keywords": [
+    "gps",
+    "location",
+    "tracking",
+    "geolocation",
+    "geofencing",
+    "background",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-wp8",
+    "cordova",
+    "phonegap"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": "Chris Scott, Transistor Software",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/transistorsoft/cordova-background-geolocation-lt/issues"
+  },
+  "homepage": "https://github.com/transistorsoft/cordova-background-geolocation-lt#README"
+}

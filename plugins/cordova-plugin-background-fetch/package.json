@@ -1,0 +1,32 @@
+{
+  "name": "cordova-plugin-background-fetch",
+  "version": "4.0.0",
+  "description": "Cordova implementation of iOS Background Fetch API",
+  "cordova": {
+    "id": "cordova-plugin-background-fetch",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/transistorsoft/cordova-plugin-background-fetch.git"
+  },
+  "keywords": [
+    "cordova",
+    "background",
+    "fetch"  
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/transistorsoft/react-native-background-fetch/issues"
+  },
+  "homepage": "https://github.com/transistorsoft/react-native-background-fetch",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": "Chris Scott, Transistor Software <chris@transistorsoft.com>"
+}
