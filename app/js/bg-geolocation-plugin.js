@@ -12,7 +12,6 @@
             var lat    = coords.latitude;
             var lng    = coords.longitude;
             console.log('- Location: ', JSON.stringify(location));
-            console.log("*********************************\n Latitude: " + location.coords.latitude + "\n Longitude: " + location.coords.longitude + "\n*********************************\n");
 
             // Must signal completion of your callbackFn.
             bgGeo.finish(taskId);

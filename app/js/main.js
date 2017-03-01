@@ -12,7 +12,6 @@ var lastSeenOn;
 
 var routing = L.Routing.control({
     createMarker: function() { return null; },
-    // geocoder: L.Control.Geocoder.nominatim(),
     draggableWaypoints: false,
     geocodersClassName: 'hidden',
     addWaypoints: false
@@ -167,6 +166,11 @@ function addMarker(latlng, description, markerId) {
     marker.on('contextmenu', function (e) {
         mymap.removeLayer(this);
         localStorage.removeItem(this.id);
+
+        if(latlng == routing.getWaypoints()[1].latLng) {
+            routing.getPlan().setWaypoints([]);
+            setOrigin(currentPosition.getLatLng());
+        }
     });
 
     var StorageObject = { 'lat': latlng.lat, 'lng': latlng.lng, 'description': description};

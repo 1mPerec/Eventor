@@ -10,7 +10,10 @@
     "leaflet-routing-machine": "^3.2.5",
     "sweetalert2": "^6.3.8"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp-concat": "^2.6.1",
+    "gulp-sass": "^3.1.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
