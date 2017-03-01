@@ -36,4 +36,5 @@ gulp.task('sass', function () {
 
 gulp.task('watch', function () {
     gulp.watch('scss/**/*.scss', ['sass']);
+    gulp.watch('app/js/*.js', ['concatJs']);
 });

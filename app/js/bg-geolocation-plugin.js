@@ -12,6 +12,7 @@
             var lat    = coords.latitude;
             var lng    = coords.longitude;
             console.log('- Location: ', JSON.stringify(location));
+            console.log("*********************************\n Latitude: " + location.coords.latitude + "\n Longitude: " + location.coords.longitude + "\n*********************************\n");
 
             // Must signal completion of your callbackFn.
             bgGeo.finish(taskId);
@@ -63,6 +64,7 @@
         }, function(state) {
             // This callback is executed when the plugin is ready to use.
             console.log('BackgroundGeolocation ready: ', state);
+            console.log('Tsup');
             if (!state.enabled) {
                 bgGeo.start();
             }
