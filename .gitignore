@@ -2,5 +2,5 @@
 plugins
 platforms
 node_modules
-www/bundle.css
-www/bundle.js
+**/bundle.css
+**/bundle.js
