@@ -27,7 +27,7 @@
   bottom: 70px;
   left: 25px;
   z-index: 10;
-  background: white no-repeat center url("../images/You.gif");
+  background: white no-repeat center url("images/You.gif");
   background-size: 25px 25px; }
   #location-btn:focus {
     outline: none; }

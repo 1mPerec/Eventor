@@ -15,6 +15,7 @@ gulp.task('concatJs', function () {
 
 gulp.task('concatCss', function () {
     return gulp.src([
+        'www/css/**/*.css',
         'node_modules/leaflet/dist/*.css',
         'node_modules/leaflet-routing-machine/dist/*.css',
         'node_modules/sweetalert2/dist/sweetalert2.css'
@@ -29,12 +30,12 @@ gulp.task('copyfiles', function() {
 });
 
 gulp.task('sass', function () {
-    gulp.src('./scss/*.scss')
-        .pipe(sass('main.css'))
-        .pipe(gulp.dest('www/css'));
+    return gulp.src('./sass/**/*.scss')
+        .pipe(sass('app/scss/*.scss'))
+        .pipe(gulp.dest('./css'));
 });
 
 gulp.task('watch', function () {
-    gulp.watch('scss/**/*.scss', ['sass']);
+    gulp.watch('app/scss/*.scss', ['sass']);
     gulp.watch('app/js/*.js', ['concatJs']);
 });
