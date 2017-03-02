@@ -48,13 +48,14 @@ gulp.task('runios', function (done) {
 });
 
 gulp.task('assets', function (callback) {
-    runSequence(
+    runSequence('sass',
             ['concatJs', 'concatCss', 'copyfiles'],
+            'runios',
     callback
     )
 });
 
-gulp.task('build', ['sass','assets', 'runios']);
+gulp.task('build', ['assets']);
 
 gulp.task('watch', function () {
     gulp.watch('app/scss/*.scss', ['sass']);
