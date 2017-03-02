@@ -5,7 +5,7 @@ var DELAY = 175, clicks = 0, timer = null;
 var maplayer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiMW1wZXJlYyIsImEiOiJjaXpuemgwN2MwMzMxMndrNzhxODJsN2toIn0.Uo549WrORGOAySucvwubsg'
 ).addTo(mymap);
 
-var currentPosition;
+var currentPosition = {id: 'YourLocation'};
 var lastSeenOn;
 
 // Adding Rout-machine
@@ -108,7 +108,8 @@ function init() {
             mymap.setView(marker, 18);
         }
         else {
-            addMarker(marker, marker.description, id);
+            var latlng = {lat: marker.lat, lng: marker.lng};
+            addMarker(latlng, marker.description, id);
         }
     }
 
@@ -128,20 +129,6 @@ function createButton(label, container) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////
-////////////////////////////  is on the List func  /////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-function  isOnTheList(myArr, myItem) {
-    for(item in myArr) {
-        if(item == myItem) {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-/////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////   Add Marker func   ////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -149,8 +136,10 @@ function  isOnTheList(myArr, myItem) {
 
 function addMarker(latlng, description, markerId) {
 
-    if(isOnTheList(markersList, markerId)) {
-        mymap.removeLayer(markersList[markerId]);
+    if(markersList[markerId]) {
+        mymap.removeLayer(markersList[markerId].marker);
+        mymap.removeLayer(markersList[markerId].radius);
+        delete markersList[markerId];
     }
 
     var marker = L.marker(latlng).addTo(mymap);
@@ -165,11 +154,15 @@ function addMarker(latlng, description, markerId) {
 
     marker.on('contextmenu', function (e) {
         mymap.removeLayer(this);
+        mymap.removeLayer(markersList[this.id].radius);
         localStorage.removeItem(this.id);
 
-        if(latlng == routing.getWaypoints()[1].latLng) {
-            routing.getPlan().setWaypoints([]);
-            setOrigin(currentPosition.getLatLng());
+        //Create Id to delete a waypoint
+
+        if( latlng.lat == routing.getWaypoints()[1].latLng.lat &&
+            latlng.lng == routing.getWaypoints()[1].latLng.lng)  {
+
+            routing.getPlan().setWaypoints([currentPosition.getLatLng()]);
         }
     });
 
@@ -177,20 +170,21 @@ function addMarker(latlng, description, markerId) {
 
     if(markerId != 'YourLocation') {
         localStorage.setItem(markerId, JSON.stringify(StorageObject));
+        var radius = L.circle([latlng.lat, latlng.lng], {
+            fillOpacity: 0.1,
+            fillColor: 'red',
+            color: 'none',
+            radius: 100
+        }).addTo(mymap);
     }
 
-    markersList[markerId] = marker;
+    markersList[markerId] = {marker: marker, radius: radius};
 
     return marker;
 }
 
 function acceptableDescription(description) {
-    if(description.length < 3) {
-        return false;
-    }
-    else {
-        return true;
-    }
+    return (description.length > 3);
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -264,7 +258,7 @@ mymap.on("click", function(e) {
 ///////////////////////   Center on self func   ////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-function CenterOnSelf() {
+function centerOnSelf() {
     mymap.setView(currentPosition.getLatLng());
 }
 
@@ -275,7 +269,6 @@ function CenterOnSelf() {
 function onPositionResived(position) {
 
     var latlng = {'lat': position.coords.latitude, 'lng': position.coords.longitude};
-
     currentPosition = addMarker(latlng, 'Your current location', 'YourLocation');
     currentPosition.id = 'YourLocation';
     currentPosition.setIcon(You);
@@ -285,6 +278,7 @@ function onPositionResived(position) {
 
     if(document.getElementById('location-btn').className == 'spinning') {
         document.getElementById('location-btn').className = '';
+        centerOnSelf();
     }
 }
 
@@ -319,4 +313,3 @@ var You = L.icon({
     iconSize:     [40, 42], // size of the icon
     popupAnchor:  [0, -16] // point from which the popup shoulCreating Your Location Icond open relative to the iconAnchor
 });
-
