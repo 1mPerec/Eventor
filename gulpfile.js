@@ -1,6 +1,9 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var sass = require('gulp-sass');
+var child_process = require('child_process');
+var runSequence = require('run-sequence');
+var notifier = require('node-notifier');
 
 gulp.task('concatJs', function () {
     return gulp.src([
@@ -34,6 +37,24 @@ gulp.task('sass', function () {
         .pipe(sass('app/scss/*.scss'))
         .pipe(gulp.dest('./css'));
 });
+
+gulp.task('runios', function (done) {
+    console.log('run phonegap run ios');
+    child_process.execFile('phonegap', ['run', 'ios'], function () {
+        console.log('done phonegap run ios');
+        notifier.notify({ title: 'IOS run', message: 'Done' });
+        done();
+    });
+});
+
+gulp.task('assets', function (callback) {
+    runSequence(
+            ['concatJs', 'concatCss', 'copyfiles'],
+    callback
+    )
+});
+
+gulp.task('build', ['sass','assets', 'runios']);
 
 gulp.task('watch', function () {
     gulp.watch('app/scss/*.scss', ['sass']);
