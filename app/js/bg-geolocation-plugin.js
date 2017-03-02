@@ -13,6 +13,8 @@
             var lng    = coords.longitude;
             console.log('- Location: ', JSON.stringify(location));
 
+            onPositionResived(location);
+
             // Must signal completion of your callbackFn.
             bgGeo.finish(taskId);
         };
@@ -36,7 +38,7 @@
             desiredAccuracy: 0,
             distanceFilter: 10,
             stationaryRadius: 50,
-            locationUpdateInterval: 1000,
+            locationUpdateInterval: 10000,
             fastestLocationUpdateInterval: 5000,
 
             // Activity Recognition config
@@ -45,7 +47,7 @@
             stopTimeout: 5,
 
             // Application config
-            debug: true,
+            debug: false,
             stopOnTerminate: false,
             startOnBoot: true,
 

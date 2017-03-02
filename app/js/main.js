@@ -54,8 +54,10 @@ function overlappingWithEvents() {
         var marker = markersList[eventId].marker;
         var radius = markersList[eventId].radius;
 
-        if(marker.id != 'YourLocation' && isInTheRadius(currentPosition, radius)) {
+        if(marker.id != 'YourLocation' && isInTheRadius(currentPosition, radius) && !markersList[eventId].beep) {
             radius.setStyle({fillColor: 'green'});
+            navigator.notification.beep();
+            markersList[eventId].beep = true;
         }
     }
 }
@@ -289,11 +291,10 @@ function onPositionResived(position) {
     lastSeenOn = {'lat': currentPosition.getLatLng().lat, 'lng': currentPosition.getLatLng().lng};
     localStorage.setItem('lastSeenOn', JSON.stringify(lastSeenOn));
     setOrigin(currentPosition.getLatLng());
-
+    overlappingWithEvents();
     if(document.getElementById('location-btn').className == 'spinning') {
         document.getElementById('location-btn').className = '';
         centerOnSelf();
-        overlappingWithEvents();
     }
 }
 
