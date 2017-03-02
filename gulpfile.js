@@ -33,9 +33,9 @@ gulp.task('copyfiles', function() {
 });
 
 gulp.task('sass', function () {
-    return gulp.src('./sass/**/*.scss')
-        .pipe(sass('app/scss/*.scss'))
-        .pipe(gulp.dest('./css'));
+    return gulp.src('./app/scss/**/*.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('./www/css'));
 });
 
 gulp.task('runios', function (done) {

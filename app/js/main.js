@@ -229,7 +229,6 @@ mymap.on("click", function(e) {
             container.className = 'eventContainer';
             eventDescription.placeholder = "Write a description of the event here";
 
-            createEvent.disabled = true;
 
             L.popup()
                 .setContent(container)
@@ -248,13 +247,7 @@ mymap.on("click", function(e) {
                     createEvent.click();
                 }
 
-                if(validKey(event.keyCode)) {
-                    createEvent.disabled = !acceptableDescription(eventDescription.value + event.key);
-                }
-                else if (event.keyCode == 8) {
-                    var value = eventDescription.value.slice(0, -1);
-                    createEvent.disabled = !acceptableDescription(value);
-                }
+         
             });
 
             L.DomEvent.on(createEvent, 'click', function() {
