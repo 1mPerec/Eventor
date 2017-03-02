@@ -38,9 +38,31 @@ function validKey(key) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////   Clear func   //////////////////////////////////
+/////////////////////////   Is in the radius func   ////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
+function isInTheRadius(CurrentLocation, Event) {
+
+    if(CurrentLocation) {
+        return CurrentLocation.getLatLng().distanceTo(Event.getLatLng()) <= Event.getRadius();
+    }
+
+}
+
+function overlappingWithEvents() {
+    for(eventId in markersList) {
+        var marker = markersList[eventId].marker;
+        var radius = markersList[eventId].radius;
+
+        if(marker.id != 'YourLocation' && isInTheRadius(currentPosition, radius)) {
+            radius.setStyle({fillColor: 'green'});
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////   Clear func   //////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 function clearMarkers() {
 
@@ -138,7 +160,6 @@ function addMarker(latlng, description, markerId) {
 
     if(markersList[markerId]) {
         mymap.removeLayer(markersList[markerId].marker);
-        mymap.removeLayer(markersList[markerId].radius);
         delete markersList[markerId];
     }
 
@@ -279,6 +300,7 @@ function onPositionResived(position) {
     if(document.getElementById('location-btn').className == 'spinning') {
         document.getElementById('location-btn').className = '';
         centerOnSelf();
+        overlappingWithEvents();
     }
 }
 
