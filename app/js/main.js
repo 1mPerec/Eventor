@@ -51,11 +51,20 @@ function isInTheRadius(CurrentLocation, Event) {
 
 function overlappingWithEvents() {
     for(eventId in markersList) {
+
         var marker = markersList[eventId].marker;
         var radius = markersList[eventId].radius;
 
-        if(marker.id != 'YourLocation' && isInTheRadius(currentPosition, radius)) {
-            radius.setStyle({fillColor: 'green'});
+        if(marker.id != 'YourLocation') {
+
+            if (isInTheRadius(currentPosition, radius)) {
+                radius.setStyle({fillColor: 'green'});
+                radius.intersects = true;
+            }
+            else if(radius.intersects){
+                radius.setStyle({fillColor: 'red'});
+                radius.intersects = false;
+            }
         }
     }
 }
@@ -197,6 +206,8 @@ function addMarker(latlng, description, markerId) {
             color: 'none',
             radius: 100
         }).addTo(mymap);
+        radius['intersects'] = false;
+        console.log(radius);
     }
 
     markersList[markerId] = {marker: marker, radius: radius};
@@ -300,8 +311,9 @@ function onPositionResived(position) {
     if(document.getElementById('location-btn').className == 'spinning') {
         document.getElementById('location-btn').className = '';
         centerOnSelf();
-        overlappingWithEvents();
     }
+
+    overlappingWithEvents();
 }
 
 function onPositionNotResived(positionError) {
