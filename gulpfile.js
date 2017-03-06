@@ -33,9 +33,9 @@ gulp.task('copyfiles', function() {
 });
 
 gulp.task('sass', function () {
-    return gulp.src('./sass/**/*.scss')
-        .pipe(sass('app/scss/*.scss'))
-        .pipe(gulp.dest('./css'));
+    return gulp.src('./app/scss/**/*.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('./www/css'));
 });
 
 gulp.task('runios', function (done) {
@@ -48,13 +48,14 @@ gulp.task('runios', function (done) {
 });
 
 gulp.task('assets', function (callback) {
-    runSequence(
+    runSequence('sass',
             ['concatJs', 'concatCss', 'copyfiles'],
+            'runios',
     callback
     )
 });
 
-gulp.task('build', ['sass','assets', 'runios']);
+gulp.task('build', ['assets']);
 
 gulp.task('watch', function () {
     gulp.watch('app/scss/*.scss', ['sass']);

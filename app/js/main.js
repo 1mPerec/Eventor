@@ -60,6 +60,8 @@ function overlappingWithEvents() {
             if (isInTheRadius(currentPosition, radius)) {
                 radius.setStyle({fillColor: 'green'});
                 radius.intersects = true;
+                navigator.notification.beep();
+                markersList[eventId].beep = true;
             }
             else if(radius.intersects){
                 radius.setStyle({fillColor: 'red'});
@@ -240,7 +242,6 @@ mymap.on("click", function(e) {
             container.className = 'eventContainer';
             eventDescription.placeholder = "Write a description of the event here";
 
-            createEvent.disabled = true;
 
             L.popup()
                 .setContent(container)
@@ -259,13 +260,7 @@ mymap.on("click", function(e) {
                     createEvent.click();
                 }
 
-                if(validKey(event.keyCode)) {
-                    createEvent.disabled = !acceptableDescription(eventDescription.value + event.key);
-                }
-                else if (event.keyCode == 8) {
-                    var value = eventDescription.value.slice(0, -1);
-                    createEvent.disabled = !acceptableDescription(value);
-                }
+
             });
 
             L.DomEvent.on(createEvent, 'click', function() {
@@ -307,13 +302,11 @@ function onPositionResived(position) {
     lastSeenOn = {'lat': currentPosition.getLatLng().lat, 'lng': currentPosition.getLatLng().lng};
     localStorage.setItem('lastSeenOn', JSON.stringify(lastSeenOn));
     setOrigin(currentPosition.getLatLng());
-
+    overlappingWithEvents();
     if(document.getElementById('location-btn').className == 'spinning') {
         document.getElementById('location-btn').className = '';
         centerOnSelf();
     }
-
-    overlappingWithEvents();
 }
 
 function onPositionNotResived(positionError) {
