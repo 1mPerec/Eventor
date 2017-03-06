@@ -10,6 +10,7 @@ gulp.task('concatJs', function () {
         'node_modules/sweetalert2/dist/sweetalert2.js',
         'node_modules/leaflet/dist/*.js',
         'node_modules/leaflet-routing-machine/dist/*.js',
+        'app/js/sounds-js/*.js',
         'app/js/*.js'
         ])
         .pipe(concat('bundle.js'))

@@ -23,6 +23,17 @@ maplayer.id = 'mainLayer';
 
 init();
 
+function notifyUser(message) {
+    cordova.plugins.notification.local.schedule({
+        id: 'ID-'+Date.now(),
+        at: new Date(new Date().getTime() + 1000),// now + 3s
+        title: 'TEST',
+        text: message,
+        sound: "file://sounds/beep.wav"
+    });
+    navigator.notification.vibrate(2500);
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////   Valid key func   ////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,14 +69,16 @@ function overlappingWithEvents() {
         if(marker.id != 'YourLocation') {
 
             if (isInTheRadius(currentPosition, radius)) {
-                radius.setStyle({fillColor: 'green'});
-                radius.intersects = true;
-                navigator.notification.beep();
-                markersList[eventId].beep = true;
+                if(!radius.intersects) {
+                    radius.setStyle({fillColor: 'green'});
+                    radius.intersects = true;
+                    notifyUser('User has entered a void');
+                }
             }
             else if(radius.intersects){
                 radius.setStyle({fillColor: 'red'});
                 radius.intersects = false;
+                notifyUser('User has exited a void');
             }
         }
     }
@@ -145,14 +158,12 @@ function init() {
             addMarker(latlng, marker.description, id);
         }
     }
-
 }
 
 
 /////////////////////////////////////////////////////////////////////////////////
 //////////////////////////   Create Button func   //////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-
 
 function createButton(label, container) {
     var btn = L.DomUtil.create('button', '', container);

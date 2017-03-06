@@ -10,6 +10,9 @@
     <content src="index.html" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="16" />
+    <feature name="Notification">
+        <param name="ios-package" value="CDVNotification" />
+    </feature>
     <plugin name="cordova-plugin-battery-status" source="npm" spec="~1.1.1" />
     <plugin name="cordova-plugin-camera" source="npm" spec="~2.1.1" />
     <plugin name="cordova-plugin-media-capture" source="npm" spec="~1.2.0" />
@@ -126,4 +129,5 @@
         <variable name="XWALK_MULTIPLEAPK" value="true" />
     </plugin>
     <plugin name="cordova-plugin-whitelist" spec="~1.2.2" />
+    <plugin name="de.appplant.cordova.plugin.local-notification" spec="https://github.com/acianti/cordova-plugin-local-notifications" />
 </widget>
