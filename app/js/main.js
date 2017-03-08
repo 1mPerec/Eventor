@@ -26,11 +26,15 @@ init();
 function notifyUser(message) {
     cordova.plugins.notification.local.schedule({
         id: 'ID-'+Date.now(),
-        at: new Date(new Date().getTime() + 1000),// now + 3s
+        at: new Date(new Date().getTime() + 1000),// now + 1s
         title: 'TEST',
         text: message,
         sound: "file://sounds/beep.wav"
     });
+
+    beep = new Media("sounds/beep.wav");
+    beep.play();
+
     navigator.notification.vibrate(2500);
 }
 
@@ -104,6 +108,7 @@ function clearMarkers() {
 
             if(layer.id != 'mainLayer' && layer.id != 'YourLocation') {
                 mymap.removeLayer(layer);
+                delete markersList[layer.id];
             }
 
         });
@@ -125,7 +130,8 @@ function clearMarkers() {
         }
 
         routing.setWaypoints([]);
-        markersList = {};
+
+        console.log(markersList);
 
         swal(
             'Deleted!',
@@ -199,6 +205,7 @@ function addMarker(latlng, description, markerId) {
         mymap.removeLayer(this);
         mymap.removeLayer(markersList[this.id].radius);
         localStorage.removeItem(this.id);
+        delete markersList[this.id];
 
         //Create Id to delete a waypoint
 
@@ -220,7 +227,6 @@ function addMarker(latlng, description, markerId) {
             radius: 100
         }).addTo(mymap);
         radius['intersects'] = false;
-        console.log(radius);
     }
 
     markersList[markerId] = {marker: marker, radius: radius};
@@ -314,8 +320,9 @@ function onPositionResived(position) {
     localStorage.setItem('lastSeenOn', JSON.stringify(lastSeenOn));
     setOrigin(currentPosition.getLatLng());
     overlappingWithEvents();
-    if(document.getElementById('location-btn').className == 'spinning') {
-        document.getElementById('location-btn').className = '';
+
+    if(document.getElementById('location-btn').className.indexOf('spinning') > -1 ) {
+        document.getElementById('location-btn').className = document.getElementById('location-btn').className.slice('spinning '.length);
         centerOnSelf();
     }
 }

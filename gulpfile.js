@@ -40,10 +40,10 @@ gulp.task('sass', function () {
 });
 
 gulp.task('runios', function (done) {
-    console.log('run phonegap run ios');
-    child_process.execFile('phonegap', ['run', 'ios'], function () {
-        console.log('done phonegap run ios');
-        notifier.notify({ title: 'IOS run', message: 'Done' });
+    console.log('build phonegap build ios');
+    child_process.execFile('phonegap', ['build', 'ios'], function () {
+        console.log('done phonegap build ios');
+        notifier.notify({ title: 'IOS Build', message: 'Done' });
         done();
     });
 });

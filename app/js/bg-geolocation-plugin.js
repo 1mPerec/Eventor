@@ -4,6 +4,9 @@
 
     function onDeviceReady() {
         // Get a reference to the plugin.
+
+        cordova.plugins.notification.local.promptForPermission();
+
         var bgGeo = window.BackgroundGeolocation;
 
         //This callback will be executed every time a geolocation is recorded in the background.
@@ -64,8 +67,6 @@
             }
         }, function(state) {
             // This callback is executed when the plugin is ready to use.
-            console.log('BackgroundGeolocation ready: ', state);
-            console.log('Tsup');
             if (!state.enabled) {
                 bgGeo.start();
             }

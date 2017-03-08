@@ -43,9 +43,9 @@
     margin: auto;
     border-radius: 50%;
     z-index: 9; }
-  #location-btn .spinning {
+  #location-btn.spinning {
     pointer-events: none; }
-    #location-btn .spinning:before {
+    #location-btn.spinning:before {
       border: 2px solid #f3f3f3;
       border-top: 2px solid #8CD4F5;
       animation: spin 1s infinite; }
