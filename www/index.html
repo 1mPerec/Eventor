@@ -14,10 +14,23 @@
 
     <div class="mapid-wrapper">
         <div id="mapid" class="map"></div>
-        <button class="clearMarkers" onclick="clearMarkers()">Clear Markers</button>
+        <button class="clearMarkers" onclick="clearMarkers()"></button>
 
         <button id="location-btn" class="spinning" onclick="centerOnSelf()"></button>
 
+    </div>
+
+    <div id="menu">
+        <textarea id="marker-description"></textarea>
+        <a id="options" class="menu-item">
+            Options
+        </a>
+        <a id="save-pin" onclick="savePin()" class="menu-item">
+            Save pin
+        </a>
+        <a id="close-btn" class="menu-item">
+            Cancel
+        </a>
     </div>
 
     <!---------------Scripts--------------->

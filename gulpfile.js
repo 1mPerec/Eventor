@@ -10,7 +10,7 @@ gulp.task('concatJs', function () {
         'node_modules/sweetalert2/dist/sweetalert2.js',
         'node_modules/leaflet/dist/*.js',
         'node_modules/leaflet-routing-machine/dist/*.js',
-        'app/js/sounds-js/*.js',
+        'node_modules/leaflet-search/dist/leaflet-search.min.js',
         'app/js/*.js'
         ])
         .pipe(concat('bundle.js'))
@@ -22,7 +22,8 @@ gulp.task('concatCss', function () {
         'www/css/**/*.css',
         'node_modules/leaflet/dist/*.css',
         'node_modules/leaflet-routing-machine/dist/*.css',
-        'node_modules/sweetalert2/dist/sweetalert2.css'
+        'node_modules/sweetalert2/dist/sweetalert2.css',
+        'node_modules/leaflet-search/dist/leaflet-search.min.css'
     ])
         .pipe(concat('bundle.css'))
         .pipe(gulp.dest('www'));

@@ -1,6 +1,56 @@
 * {
   margin: 0; }
 
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; }
+
+#menu {
+  height: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: height 0.3s ease-in-out;
+  z-index: 2;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  flex-wrap: nowrap; }
+  #menu.active {
+    height: 60px; }
+    @media (max-width: 768px) {
+      #menu.active {
+        height: 120px;
+        flex-wrap: wrap; } }
+  #menu .menu-item {
+    border-left: 2px solid rgba(0, 0, 0, 0.3);
+    height: 60px;
+    line-height: 60px;
+    width: 32%;
+    text-align: center;
+    background-color: white;
+    max-width: 250px;
+    min-width: 90px;
+    cursor: pointer; }
+    #menu .menu-item:hover {
+      color: dodgerblue; }
+    #menu .menu-item:last-of-type {
+      border-right: 2px solid rgba(0, 0, 0, 0.3); }
+  #menu #marker-description {
+    width: 100%;
+    margin: 0 10px;
+    resize: none;
+    font-size: 16px;
+    max-height: 39px;
+    overflow: auto;
+    padding: 0; }
+    #menu #marker-description:focus {
+      outline: none; }
+
 .mapid-wrapper {
   padding: 0;
   height: 100vh;
@@ -23,8 +73,8 @@
   height: 35px;
   width: 35px;
   position: absolute;
-  bottom: 70px;
-  left: 25px;
+  bottom: 140px;
+  right: 25px;
   z-index: 10;
   background: white no-repeat center url("images/You.gif");
   background-size: 25px 25px; }
@@ -58,13 +108,15 @@
 
 .clearMarkers {
   position: absolute;
-  bottom: 25px;
-  left: 25px;
+  top: 128px;
+  left: 10px;
   z-index: 10;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   border-radius: 4px;
-  background-color: white;
-  border: 2px solid #ccc;
+  background: white no-repeat center url("images/trash.png");
+  background-size: 25px 25px;
+  border: 2px solid rgba(0, 0, 0, 0.3);
   font-weight: 600;
   cursor: pointer; }
   .clearMarkers:focus {
@@ -93,3 +145,35 @@
 
 .hidden {
   display: none; }
+
+.leaflet-top.leaflet-left .leaflet-control-search {
+  box-shadow: none;
+  position: absolute;
+  left: 0;
+  top: 75px;
+  min-width: 30px;
+  height: 30px;
+  border: 2px solid rgba(0, 0, 0, 0.3); }
+  .leaflet-top.leaflet-left .leaflet-control-search .search-input {
+    height: 30px;
+    width: 120px;
+    font-size: 16px;
+    border: none;
+    margin: 0;
+    padding-left: 5px;
+    padding-right: 60px; }
+    .leaflet-top.leaflet-left .leaflet-control-search .search-input:focus {
+      outline: none; }
+  .leaflet-top.leaflet-left .leaflet-control-search .search-button {
+    position: absolute;
+    right: 0;
+    border: none;
+    width: 30px;
+    height: 30px;
+    background: url("images/search-icn.png") no-repeat 2px 2px;
+    background-position: center;
+    background-size: 17px 17px; }
+
+.leaflet-top.leaflet-left .search-cancel {
+  right: 31px;
+  top: 3px; }

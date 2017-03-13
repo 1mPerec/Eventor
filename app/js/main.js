@@ -8,6 +8,21 @@ var maplayer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/
 var currentPosition = {id: 'YourLocation'};
 var lastSeenOn;
 
+//adding search
+
+mymap.addControl( new L.Control.Search({
+    url: 'http://nominatim.openstreetmap.org/search?format=json&q={s}',
+    jsonpParam: 'json_callback',
+    propertyName: 'display_name',
+    propertyLoc: ['lat','lon'],
+    marker: L.circleMarker([0,0],{radius:0}),
+    autoCollapse: true,
+    autoType: false,
+    minLength: 2
+}) );
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Adding Rout-machine
 
 var routing = L.Routing.control({
@@ -70,7 +85,7 @@ function overlappingWithEvents() {
         var marker = markersList[eventId].marker;
         var radius = markersList[eventId].radius;
 
-        if(marker.id != 'YourLocation') {
+        if(marker.id != 'YourLocation' && marker.id != 'flag') {
 
             if (isInTheRadius(currentPosition, radius)) {
                 if(!radius.intersects) {
@@ -101,7 +116,7 @@ function clearMarkers() {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: 'Yes, clear markers!'
     }).then(function () {
 
         mymap.eachLayer(function (layer) {
@@ -131,14 +146,13 @@ function clearMarkers() {
 
         routing.setWaypoints([]);
 
-        console.log(markersList);
-
         swal(
             'Deleted!',
             'Your file has been deleted.',
             'success'
-        )
-    })
+        );
+        closeMenu();
+    });
 }
 
 
@@ -164,18 +178,6 @@ function init() {
             addMarker(latlng, marker.description, id);
         }
     }
-}
-
-
-/////////////////////////////////////////////////////////////////////////////////
-//////////////////////////   Create Button func   //////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-function createButton(label, container) {
-    var btn = L.DomUtil.create('button', '', container);
-    btn.setAttribute('type', 'button');
-    btn.innerHTML = label;
-    return btn;
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -207,10 +209,10 @@ function addMarker(latlng, description, markerId) {
         localStorage.removeItem(this.id);
         delete markersList[this.id];
 
-        //Create Id to delete a waypoint
 
-        if( latlng.lat == routing.getWaypoints()[1].latLng.lat &&
-            latlng.lng == routing.getWaypoints()[1].latLng.lng)  {
+        if( routing.getWaypoints()[1].latLng &&
+            e.latlng.lat == routing.getWaypoints()[1].latLng.lat &&
+            e.latlng.lng == routing.getWaypoints()[1].latLng.lng)  {
 
             routing.getPlan().setWaypoints([currentPosition.getLatLng()]);
         }
@@ -252,43 +254,23 @@ mymap.on("click", function(e) {
 
         timer = setTimeout(function() {
 
-            var container = L.DomUtil.create('div'),
-                eventDescription = L.DomUtil.create('textarea', 'eventDescription', container),
-                createEvent = createButton('Create the event', container);
+            var flag = L.marker(e.latlng).addTo(mymap);
+            flag.id = 'flag';
+            flag.setIcon(Flag);
 
-            container.className = 'eventContainer';
-            eventDescription.placeholder = "Write a description of the event here";
+            if(markersList['flag']) {
+                mymap.removeLayer(markersList['flag'].marker);
+            }
 
+            markersList['flag'] = {marker: flag};
 
-            L.popup()
-                .setContent(container)
-                .setLatLng(e.latlng)
-                .openOn(mymap);
-
-            L.DomEvent.on(eventDescription, 'keydown', function (event) {
-
-                if(event.which == 13 || event.keyCode == 13) {
-                    event.preventDefault();
-                    eventDescription.value += "\n";
-                }
-
-                if(event.keyCode == 13 && (event.metaKey || event.altKey || event.ctrlKey))
-                {
-                    createEvent.click();
-                }
-
-
-            });
-
-            L.DomEvent.on(createEvent, 'click', function() {
-
-                addMarker(e.latlng, eventDescription.value, e.latlng.lat + '' + e.latlng.lng);
-                mymap.closePopup();
-            });
+            document.getElementById('marker-description').focus();
 
             clicks = 0;             //after action performed, reset counter
 
         }, DELAY);
+
+        openMenu();
 
     } else {
 
@@ -347,7 +329,38 @@ function setDestination(latlng) {
     routing.spliceWaypoints(1, 1, latlng);
 }
 
+/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////   Menu Staff  /////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
+function openMenu() {
+    document.getElementById("menu").className = 'active';
+}
+
+function closeMenu() {
+    document.getElementById("menu").className = "";
+    document.getElementById("marker-description").value = "";
+}
+
+document.getElementById("close-btn").onclick = function () {
+    mymap.removeLayer(markersList['flag'].marker);
+    delete markersList['flag'];
+    closeMenu();
+};
+
+/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////   Add Pin   //////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+function savePin() {
+    var latlng = markersList['flag'].marker.getLatLng();
+    var description = document.getElementById('marker-description').value;
+    var id = latlng.lat + '' + latlng.lng;
+    addMarker(latlng, description, id);
+    mymap.removeLayer(markersList['flag'].marker);
+    delete markersList['flag'];
+    closeMenu();
+}
 
 /////////////////////////////////////////////////////////////////////////////////
 ////////////////////   Creating Your Location Icon   ///////////////////////////
@@ -356,5 +369,11 @@ function setDestination(latlng) {
 var You = L.icon({
     iconUrl: 'images/You.gif',
     iconSize:     [40, 42], // size of the icon
+    popupAnchor:  [0, -16] // point from which the popup shoulCreating Your Location Icond open relative to the iconAnchor
+});
+
+var Flag = L.icon({
+    iconUrl: 'images/flag.png',
+    iconSize:     [30, 50], // size of the icon
     popupAnchor:  [0, -16] // point from which the popup shoulCreating Your Location Icond open relative to the iconAnchor
 });
