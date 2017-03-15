@@ -1,0 +1,357 @@
+import Location from './location';
+
+class App {
+  constructor() {
+    console.log('App');
+    this.init();
+    this.initHandlers();
+  }
+
+  markersList = {};
+  DELAY = 175;
+  clicks = 0;
+  timer = null;
+  
+  init() {
+    const ref = this;
+    new Location(this);
+    
+    this.mymap = L.map('mapid').setView([31.778124579640565, 35.232188701629646], 18);
+
+    var maplayer = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiMW1wZXJlYyIsImEiOiJjaXpuemgwN2MwMzMxMndrNzhxODJsN2toIn0.Uo549WrORGOAySucvwubsg')
+      .addTo(ref.mymap);
+
+    this.currentPosition = {id: 'YourLocation'};
+
+//adding search
+
+    ref.mymap.addControl( new L.Control.Search({
+      url: 'http://nominatim.openstreetmap.org/search?format=json&q={s}',
+      jsonpParam: 'json_callback',
+      propertyName: 'display_name',
+      propertyLoc: ['lat','lon'],
+      marker: L.circleMarker([0,0],{radius:0}),
+      autoCollapse: true,
+      autoType: false,
+      minLength: 2
+    }) );
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Adding Rout-machine
+
+    this.routing = L.Routing.control({
+      createMarker: function() { return null; },
+      draggableWaypoints: false,
+      geocodersClassName: 'hidden',
+      addWaypoints: false
+    }).addTo(ref.mymap);
+
+    maplayer.id = 'mainLayer';
+
+    this.run();
+
+    if (navigator.geolocation) {
+      ref.currentPosition = navigator.geolocation.watchPosition(this.onPositionResived.bind(this), onPositionNotResived, {timeout: 10000});
+    }
+
+
+    function onPositionNotResived(positionError) {
+      console.log(positionError);
+    }
+/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////   Menu Staff  /////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+    
+
+    document.getElementById("close-btn").onclick = function () {
+      ref.mymap.removeLayer(this.markersList['flag'].marker);
+      delete this.markersList['flag'];
+      ref.closeMenu();
+    };
+
+
+/////////////////////////////////////////////////////////////////////////////////
+////////////////////   Creating Your Location Icon   ///////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+    this.You = L.icon({
+      iconUrl: 'images/You.gif',
+      iconSize:     [40, 42], // size of the icon
+      popupAnchor:  [0, -16] // point from which the popup shoulCreating Your Location Icond open relative to the iconAnchor
+    });
+
+    this.Flag = L.icon({
+      iconUrl: 'images/flag.png',
+      iconSize:     [30, 50], // size of the icon
+      popupAnchor:  [0, -16] // point from which the popup shoulCreating Your Location Icond open relative to the iconAnchor
+    });
+  }
+
+  run() {
+
+    for (var i = 0; i < localStorage.length; i++) {
+
+      var id = localStorage.key(i);
+
+      var marker = localStorage.getItem(id);
+
+      marker = JSON.parse(marker);
+
+      if (id == 'lastSeenOn') {
+        this.mymap.setView(marker, 18);
+      }
+      else {
+        var latlng = {lat: marker.lat, lng: marker.lng};
+        this.addMarker(latlng, marker.description, id);
+      }
+    }
+  }
+
+  initHandlers() {
+    document
+      .getElementById('save-pin')
+      .addEventListener('click', this.savePin.bind(this));
+
+    document
+      .getElementById('location-btn')
+      .addEventListener('click', this.centerOnSelf.bind(this));
+
+    document
+      .getElementById('clear-markers')
+      .addEventListener('click', this.clearMarkers.bind(this));
+
+    this.mymap.on('click', (e) => {
+
+      this.clicks++;  //count clicks
+
+      if (this.clicks === 1) {
+
+        this.timer = setTimeout(() => {
+
+          var flag = L.marker(e.latlng).addTo(this.mymap);
+          flag.id = 'flag';
+          flag.setIcon(this.Flag);
+
+          if (this.markersList['flag']) {
+            this.mymap.removeLayer(this.markersList['flag'].marker);
+          }
+
+          this.markersList['flag'] = {marker: flag};
+
+          document.getElementById('marker-description').focus();
+
+          this.clicks = 0;             //after action performed, reset counter
+
+        }, this.DELAY);
+
+        this.openMenu();
+
+      } else {
+
+        clearTimeout(this.timer);    //prevent single-click action
+        this.clicks = 0;             //after action performed, reset counter
+      }
+
+    });
+
+    document.getElementById("close-btn").onclick = () => {
+      this.mymap.removeLayer(this.markersList['flag'].marker);
+      delete this.markersList['flag'];
+      this.closeMenu();
+    };
+  }
+
+  notifyUser(message) {
+    cordova.plugins.notification.local.schedule({
+      id: 'ID-'+Date.now(),
+      at: new Date(new Date().getTime() + 1000),// now + 1s
+      title: 'TEST',
+      text: message,
+      sound: "file://sounds/beep.wav"
+    });
+
+    const beep = new Media("sounds/beep.wav");
+    beep.play();
+
+    navigator.notification.vibrate(2500);
+  }
+
+  overlappingWithEvents() {
+    for (let eventId in this.markersList) {
+
+      var marker = this.markersList[eventId].marker;
+      var radius = this.markersList[eventId].radius;
+
+      if (marker.id != 'YourLocation' && marker.id != 'flag') {
+
+        if (this.isInTheRadius(this.currentPosition, radius)) {
+          if (!radius.intersects) {
+            radius.setStyle({fillColor: 'green'});
+            radius.intersects = true;
+            this.notifyUser('User has entered a void');
+          }
+        } else if (radius.intersects) {
+          radius.setStyle({fillColor: 'red'});
+          radius.intersects = false;
+          this.notifyUser('User has exited a void');
+        }
+      }
+    }
+  }
+
+  isInTheRadius(CurrentLocation, Event) {
+    if (CurrentLocation) {
+      return CurrentLocation.getLatLng().distanceTo(Event.getLatLng()) <= Event.getRadius();
+    }
+  }
+
+  onPositionResived(position) {
+    const ref = this;
+    const latlng = {'lat': position.coords.latitude, 'lng': position.coords.longitude};
+    this.currentPosition = this.addMarker(latlng, 'Your current location', 'YourLocation');
+    this.currentPosition.id = 'YourLocation';
+    this.currentPosition.setIcon(this.You);
+    this.lastSeenOn = {'lat': ref.currentPosition.getLatLng().lat, 'lng': ref.currentPosition.getLatLng().lng};
+    localStorage.setItem('lastSeenOn', JSON.stringify(this.lastSeenOn));
+    this.setOrigin(ref.currentPosition.getLatLng());
+    this.overlappingWithEvents();
+
+    if (document.getElementById('location-btn').className.indexOf('spinning') > -1 ) {
+      document.getElementById('location-btn').className = document.getElementById('location-btn').className.slice('spinning '.length);
+      this.centerOnSelf();
+    }
+  }
+
+  setOrigin(latlng) {
+    this.routing.spliceWaypoints(0, 1, latlng);
+  }
+
+  addMarker(latlng, description, markerId) {
+    const ref = this;
+    if (this.markersList[markerId]) {
+      this.mymap.removeLayer(this.markersList[markerId].marker);
+      delete this.markersList[markerId];
+    }
+
+    var marker = L.marker(latlng).addTo(this.mymap);
+
+    marker.id = markerId;
+
+    marker.bindPopup(description);
+
+    marker.on('click', (e) => {
+      this.setDestination(e.latlng);
+    });
+
+    marker.on('contextmenu', function (e) {
+      ref.mymap.removeLayer(this);
+      ref.mymap.removeLayer(ref.markersList[this.id].radius);
+      localStorage.removeItem(this.id);
+      delete ref.markersList[this.id];
+
+
+      if (ref.routing.getWaypoints()[1].latLng &&
+        e.latlng.lat == ref.routing.getWaypoints()[1].latLng.lat &&
+        e.latlng.lng == ref.routing.getWaypoints()[1].latLng.lng) {
+
+        ref.routing.getPlan().setWaypoints([ref.currentPosition.getLatLng()]);
+      }
+    });
+
+    var StorageObject = { 'lat': latlng.lat, 'lng': latlng.lng, 'description': description};
+
+    if (markerId != 'YourLocation') {
+      localStorage.setItem(markerId, JSON.stringify(StorageObject));
+      var radius = L.circle([latlng.lat, latlng.lng], {
+        fillOpacity: 0.1,
+        fillColor: 'red',
+        color: 'none',
+        radius: 100
+      }).addTo(this.mymap);
+      radius['intersects'] = false;
+    }
+
+    this.markersList[markerId] = {marker: marker, radius: radius};
+
+    return marker;
+  }
+
+  setDestination(latlng) {
+    this.routing.spliceWaypoints(1, 1, latlng);
+  }
+
+  /**
+   * Add Pin
+   */
+  savePin() {
+    var latlng = this.markersList['flag'].marker.getLatLng();
+    var description = document.getElementById('marker-description').value;
+    var id = latlng.lat + '' + latlng.lng;
+    this.addMarker(latlng, description, id);
+    this.mymap.removeLayer(this.markersList['flag'].marker);
+    delete this.markersList['flag'];
+    this.closeMenu();
+  }
+
+  closeMenu() {
+    document.getElementById("menu").className = "";
+    document.getElementById("marker-description").value = "";
+  }
+
+  centerOnSelf() {
+    this.mymap.setView(this.currentPosition.getLatLng());
+  }
+
+  clearMarkers() {
+    let ref = this;
+    swal({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, clear markers!'
+    }).then(() => {
+
+      ref.mymap.eachLayer((layer) => {
+
+        if (layer.id != 'mainLayer' && layer.id != 'YourLocation') {
+          ref.mymap.removeLayer(layer);
+          delete ref.markersList[layer.id];
+        }
+
+      });
+      localStorage.clear();
+      if (ref.lastSeenOn) {
+        localStorage.setItem('lastSeenOn', JSON.stringify(ref.lastSeenOn));
+      }
+
+      var childNodes = document.getElementsByTagName("input");
+
+      for (var i = 0; i<childNodes.length; i++) {
+
+        if (childNodes[i].type == 'text') {
+
+          childNodes[i].value = '';
+        }
+      }
+
+      ref.routing.setWaypoints([]);
+
+      swal(
+        'Deleted!',
+        'Your file has been deleted.',
+        'success'
+      );
+      ref.closeMenu();
+    });
+  }
+
+  openMenu() {
+    document.getElementById("menu").className = 'active';
+  }
+}
+
+new App();
