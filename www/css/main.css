@@ -51,6 +51,107 @@ body {
     #menu #marker-description:focus {
       outline: none; }
 
+#overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 100;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+  #overlay.active {
+    visibility: visible;
+    opacity: 1; }
+  #overlay .popup {
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    background-color: white;
+    position: relative;
+    padding: 30px;
+    box-sizing: border-box; }
+    #overlay .popup #popup-title {
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: bold; }
+    #overlay .popup #popup-header {
+      display: flex;
+      justify-content: space-between; }
+      #overlay .popup #popup-header #add-photo {
+        width: 194px;
+        height: 194px;
+        border: 2px solid gray;
+        position: relative;
+        cursor: pointer;
+        margin-right: 30px; }
+        #overlay .popup #popup-header #add-photo:hover {
+          border-color: dodgerblue;
+          color: dodgerblue; }
+          #overlay .popup #popup-header #add-photo:hover #plus-icon {
+            fill: dodgerblue;
+            stroke: dodgerblue; }
+        #overlay .popup #popup-header #add-photo #add {
+          width: 50px;
+          height: 50px;
+          position: absolute;
+          top: 70px;
+          left: 0;
+          right: 0;
+          margin: auto; }
+        #overlay .popup #popup-header #add-photo .add-img-tag {
+          position: absolute;
+          bottom: 30px;
+          font-size: 20px;
+          left: 0;
+          right: 0;
+          margin: auto;
+          text-align: center; }
+      #overlay .popup #popup-header #popup-inputs {
+        flex: 1; }
+        #overlay .popup #popup-header #popup-inputs .date-container {
+          display: flex; }
+          #overlay .popup #popup-header #popup-inputs .date-container label {
+            padding-right: 20px; }
+        #overlay .popup #popup-header #popup-inputs label {
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: bold; }
+        #overlay .popup #popup-header #popup-inputs input {
+          margin-top: 5px;
+          margin-bottom: 15px; }
+        #overlay .popup #popup-header #popup-inputs input[type='text'], #overlay .popup #popup-header #popup-inputs textarea {
+          width: 100%;
+          border: 1px solid gray;
+          font-size: 16px;
+          max-width: 600px;
+          resize: none; }
+        #overlay .popup #popup-header #popup-inputs #event-description {
+          max-height: 600px;
+          height: 100%;
+          display: block;
+          margin-top: 15px; }
+    #overlay .popup #cancel {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 80px;
+      font-size: 16px;
+      background-color: white;
+      border-radius: 5px;
+      border: 1px solid gray;
+      cursor: pointer; }
+      #overlay .popup #cancel:focus {
+        outline: none; }
+      #overlay .popup #cancel:hover {
+        border-color: dodgerblue; }
+
 .mapid-wrapper {
   padding: 0;
   height: 100vh;

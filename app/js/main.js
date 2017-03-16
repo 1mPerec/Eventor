@@ -342,10 +342,24 @@ function closeMenu() {
     document.getElementById("marker-description").value = "";
 }
 
+function showPopUp() {
+    document.getElementById("overlay").className = 'active';
+}
+
+function hidePopUp() {
+    document.getElementById("overlay").className = '';
+}
+
 document.getElementById("close-btn").onclick = function () {
     mymap.removeLayer(markersList['flag'].marker);
     delete markersList['flag'];
     closeMenu();
+};
+
+document.getElementById('overlay').onclick = function (e) {
+    if(e.target == this) {
+        hidePopUp();
+    }
 };
 
 /////////////////////////////////////////////////////////////////////////////////

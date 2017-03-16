@@ -22,15 +22,37 @@
 
     <div id="menu">
         <textarea id="marker-description"></textarea>
-        <a id="options" class="menu-item">
-            Options
-        </a>
-        <a id="save-pin" onclick="savePin()" class="menu-item">
-            Save pin
-        </a>
-        <a id="close-btn" class="menu-item">
-            Cancel
-        </a>
+        <a id="save-pin" onclick="savePin()" class="menu-item">Save pin</a>
+        <a id="options" onclick="showPopUp()" class="menu-item">Options</a>
+        <a id="close-btn" class="menu-item">Cancel</a>
+    </div>
+
+    <div id="overlay">
+        <div class="popup">
+            <h2 id="popup-title">Event Options</h2>
+            <header id="popup-header">
+                <div id="add-photo">
+                    <svg id="add" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.11 64.11"><defs><style>.cls-1{fill:#606060;stroke:#424242;stroke-miterlimit:10;}</style></defs><title>add</title><path id="plus-icon" class="cls-1" d="M62.52,23.53H44V5a2.8,2.8,0,0,0-2.8-2.8H26.31A2.8,2.8,0,0,0,23.5,5V23.53H5a2.8,2.8,0,0,0-2.8,2.8V41.25A2.8,2.8,0,0,0,5,44.05H23.5V62.55a2.8,2.8,0,0,0,2.8,2.8H41.23a2.8,2.8,0,0,0,2.8-2.8V44.05H62.52a2.8,2.8,0,0,0,2.8-2.8V26.33A2.8,2.8,0,0,0,62.52,23.53Z" transform="translate(-1.71 -1.74)"/></svg>
+                    <span class="add-img-tag">Add img</span>
+                </div>
+                <div id="popup-inputs">
+                    <label for="title">Title</label>
+                    <input id="title" type="text"/>
+                    <div class="date-container">
+                        <label for="from">Event starts on
+                        <input type="date" id="from">
+                        </label>
+                        <label for="until">Event ends on
+                        <input type="date" id="until">
+                        </label>
+                    </div>
+                    <label for="event-description"></label>
+                    <label for="event-description">Description of the event</label>
+                    <textarea id="event-description"></textarea>
+                </div>
+            </header>
+            <button id="cancel" onclick="hidePopUp()">cancel</button>
+        </div>
     </div>
 
     <!---------------Scripts--------------->

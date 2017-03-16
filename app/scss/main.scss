@@ -72,6 +72,144 @@ body {
 	}
 }
 
+#overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.7);
+	transition: opacity 500ms;
+	visibility: hidden;
+	opacity: 0;
+	z-index: 100;
+	padding: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&.active {
+		visibility: visible;
+		opacity: 1;
+	}
+
+	.popup {
+		width: 100%;
+		max-width: 1200px;
+		height: 100%;
+		background-color: white;
+		position: relative;
+		padding: 30px;
+		box-sizing: border-box;
+
+		#popup-title {
+			margin-bottom: 20px;
+			font-size: 20px;
+			font-weight: bold;
+		}
+
+		#popup-header {
+
+			display: flex;
+			justify-content: space-between;
+
+			#add-photo {
+				width: 194px;
+				height: 194px;
+				border: 2px solid gray;
+				position: relative;
+				cursor: pointer;
+				margin-right: 30px;
+
+				&:hover {
+					border-color: dodgerblue;
+					color: dodgerblue;
+
+					#plus-icon {
+						fill: dodgerblue;
+						stroke: dodgerblue;
+					}
+				}
+
+				#add {
+					width: 50px;
+					height: 50px;
+					position: absolute;
+					top: 70px;
+					left: 0;
+					right: 0;
+					margin: auto;
+				}
+
+				.add-img-tag {
+					position: absolute;
+					bottom: 30px;
+					font-size: 20px;
+					left: 0;
+					right: 0;
+					margin: auto;
+					text-align: center;
+				}
+			}
+			#popup-inputs {
+				flex: 1;
+
+				.date-container {
+					display: flex;
+
+					label {
+						padding-right: 20px;
+					}
+				}
+
+				label {
+					cursor: pointer;
+					font-size: 16px;
+					font-weight: bold;
+				}
+
+				input {
+					margin-top: 5px;
+					margin-bottom: 15px;
+				}
+
+				input[type = 'text'], textarea {
+					width: 100%;
+					border: 1px solid gray;
+					font-size: 16px;
+					max-width: 600px;
+					resize: none;
+				}
+				#event-description {
+					max-height: 600px;
+					height: 100%;
+					display: block;
+					margin-top: 15px;
+				}
+			}
+		}
+
+		#cancel {
+			position: absolute;
+			bottom: 20px;
+			right: 20px;
+			width: 80px;
+			font-size: 16px;
+			background-color: white;
+			border-radius: 5px;
+			border: 1px solid gray;
+			cursor: pointer;
+
+			&:focus {
+				outline: none;
+			}
+			&:hover {
+				border-color: dodgerblue;
+			}
+		}
+	}
+}
+
 .mapid-wrapper {
 	padding: 0;
 	height: 100vh;
