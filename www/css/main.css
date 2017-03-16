@@ -151,6 +151,20 @@ body {
         outline: none; }
       #overlay .popup #cancel:hover {
         border-color: dodgerblue; }
+    #overlay .popup #create-event {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      width: 80px;
+      font-size: 16px;
+      background-color: white;
+      border-radius: 5px;
+      border: 1px solid gray;
+      cursor: pointer; }
+      #overlay .popup #create-event:focus {
+        outline: none; }
+      #overlay .popup #create-event:hover {
+        border-color: dodgerblue; }
 
 .mapid-wrapper {
   padding: 0;

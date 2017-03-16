@@ -207,6 +207,24 @@ body {
 				border-color: dodgerblue;
 			}
 		}
+		#create-event {
+			position: absolute;
+			bottom: 20px;
+			left: 20px;
+			width: 80px;
+			font-size: 16px;
+			background-color: white;
+			border-radius: 5px;
+			border: 1px solid gray;
+			cursor: pointer;
+
+			&:focus {
+				outline: none;
+			}
+			&:hover {
+				border-color: dodgerblue;
+			}
+		}
 	}
 }
 
