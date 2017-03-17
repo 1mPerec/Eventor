@@ -106,9 +106,20 @@ class App {
         this.addMarker(latlng, marker.description, id);
       }
     }
+
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+      console.log('File API Works just fine');
+    } else {
+      console.log('File API не поддерживается данным браузером');
+    }
   }
 
   initHandlers() {
+
+    document.
+        getElementById('popup-input-file')
+        .addEventListener('change', this._handleImageChange.bind(this));
+
     document
         .getElementById('save-pin')
         .addEventListener('click', this.savePin.bind(this));
@@ -246,7 +257,7 @@ class App {
 
     marker.id = markerId;
 
-    marker.bindPopup(description);
+    marker.bindPopup(description + '<button class="popup-btn">Edit</button>');
 
     marker.on('click', (e) => {
       this.setDestination(e.latlng);
@@ -364,6 +375,21 @@ class App {
       ref.closeMenu();
     });
   }
+
+  _handleImageChange(event) {
+
+    event.preventDefault();
+    const reader = new FileReader();
+    const file = event.target.files[0];
+
+    reader.onloadend = () => {
+      document.getElementById('popup-file-img').src = reader.result;
+      document.getElementById('file-add-ditails').className = 'hidden';
+    };
+
+    reader.readAsDataURL(file);
+  }
+
 
   openMenu() {
     document.getElementById("menu").className = 'active';

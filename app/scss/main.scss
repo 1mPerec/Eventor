@@ -156,6 +156,17 @@ body {
 				.input-file {
 					visibility: hidden;
 				}
+
+				#popup-file-img {
+					position: absolute;
+					left: 0;
+					right: 0;
+					width: 100%;
+					height: auto;
+					top: 0;
+					bottom: 0;
+					margin: auto;
+				}
 			}
 			#popup-inputs {
 				flex: 1;
@@ -368,7 +379,22 @@ body {
 		}
 	}
 }
+// Leaflet Popups
 
+.leaflet-pane.leaflet-popup-pane {
+
+	.leaflet-popup-content-wrapper {
+
+		padding: 5px 10px;
+		padding-bottom: 15px;
+
+		.popup-btn {
+			position: absolute;
+			right: 5px;
+			bottom: 5px;
+		}
+	}
+}
 
 //Leaflet Routing Machine
 

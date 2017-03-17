@@ -117,6 +117,15 @@ body {
           text-align: center; }
         #overlay .popup #popup-header #add-photo .input-file {
           visibility: hidden; }
+        #overlay .popup #popup-header #add-photo #popup-file-img {
+          position: absolute;
+          left: 0;
+          right: 0;
+          width: 100%;
+          height: auto;
+          top: 0;
+          bottom: 0;
+          margin: auto; }
       #overlay .popup #popup-header #popup-inputs {
         flex: 1; }
         #overlay .popup #popup-header #popup-inputs .date-container {
@@ -262,6 +271,14 @@ body {
     height: 50px; }
     .eventContainer .eventDescription:focus {
       outline: none; }
+
+.leaflet-pane.leaflet-popup-pane .leaflet-popup-content-wrapper {
+  padding: 5px 10px;
+  padding-bottom: 15px; }
+  .leaflet-pane.leaflet-popup-pane .leaflet-popup-content-wrapper .popup-btn {
+    position: absolute;
+    right: 5px;
+    bottom: 5px; }
 
 .leaflet-routing-container.leaflet-bar.leaflet-control {
   padding: 0;
