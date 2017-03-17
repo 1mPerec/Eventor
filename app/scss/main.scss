@@ -112,6 +112,7 @@ body {
 
 			display: flex;
 			justify-content: space-between;
+			flex-wrap: wrap;
 
 			#add-photo {
 				width: 194px;
@@ -120,6 +121,7 @@ body {
 				position: relative;
 				cursor: pointer;
 				margin-right: 30px;
+				margin-bottom: 30px;
 
 				&:hover {
 					border-color: dodgerblue;
@@ -149,6 +151,10 @@ body {
 					right: 0;
 					margin: auto;
 					text-align: center;
+				}
+
+				.input-file {
+					visibility: hidden;
 				}
 			}
 			#popup-inputs {
@@ -224,6 +230,14 @@ body {
 			&:hover {
 				border-color: dodgerblue;
 			}
+		}
+	}
+
+	@media (max-width: 420px) {
+		padding: 10px;
+
+		#popup-header {
+			padding: 0;
 		}
 	}
 }

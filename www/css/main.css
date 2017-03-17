@@ -83,14 +83,16 @@ body {
       font-weight: bold; }
     #overlay .popup #popup-header {
       display: flex;
-      justify-content: space-between; }
+      justify-content: space-between;
+      flex-wrap: wrap; }
       #overlay .popup #popup-header #add-photo {
         width: 194px;
         height: 194px;
         border: 2px solid gray;
         position: relative;
         cursor: pointer;
-        margin-right: 30px; }
+        margin-right: 30px;
+        margin-bottom: 30px; }
         #overlay .popup #popup-header #add-photo:hover {
           border-color: dodgerblue;
           color: dodgerblue; }
@@ -113,6 +115,8 @@ body {
           right: 0;
           margin: auto;
           text-align: center; }
+        #overlay .popup #popup-header #add-photo .input-file {
+          visibility: hidden; }
       #overlay .popup #popup-header #popup-inputs {
         flex: 1; }
         #overlay .popup #popup-header #popup-inputs .date-container {
@@ -165,6 +169,11 @@ body {
         outline: none; }
       #overlay .popup #create-event:hover {
         border-color: dodgerblue; }
+  @media (max-width: 420px) {
+    #overlay {
+      padding: 10px; }
+      #overlay #popup-header {
+        padding: 0; } }
 
 .mapid-wrapper {
   padding: 0;

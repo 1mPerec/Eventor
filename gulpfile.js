@@ -4,6 +4,7 @@ var sass = require('gulp-sass');
 var child_process = require('child_process');
 var runSequence = require('run-sequence');
 var notifier = require('node-notifier');
+var webpack = require('gulp-webpack');
 
 gulp.task('concatJs', function () {
     return gulp.src([
@@ -11,7 +12,7 @@ gulp.task('concatJs', function () {
         'node_modules/leaflet/dist/*.js',
         'node_modules/leaflet-routing-machine/dist/*.js',
         'node_modules/leaflet-search/dist/leaflet-search.min.js',
-        'app/js/*.js'
+        'tmp/*.js'
         ])
         .pipe(concat('bundle.js'))
         .pipe(gulp.dest('www'));
@@ -52,9 +53,28 @@ gulp.task('runios', function (done) {
 gulp.task('assets', function (callback) {
     runSequence('sass',
             ['concatJs', 'concatCss', 'copyfiles'],
-            'runios',
     callback
     )
+});
+
+gulp.task("webpack", function() {
+    return gulp.src(['app/js/app.js'])
+      .pipe(webpack({
+          watch: true,
+          output: {
+              filename: '[name].js'
+          },
+          devtool: 'source-map',
+          module: {
+              loaders: [
+                  {
+                      test: /\.js$/,
+                      loader: 'babel-loader'
+                  }
+              ]
+          }
+      }))
+      .pipe(gulp.dest('tmp/'))
 });
 
 gulp.task('build', ['assets']);
@@ -63,3 +83,4 @@ gulp.task('watch', function () {
     gulp.watch('app/scss/*.scss', ['sass']);
     gulp.watch('app/js/*.js', ['concatJs']);
 });
+
