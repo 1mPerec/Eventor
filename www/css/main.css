@@ -15,16 +15,19 @@ body {
   transition: height 0.3s ease-in-out;
   z-index: 2;
   background-color: white;
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-align: center;
   align-items: center;
+  -ms-flex-pack: justify;
   justify-content: space-between;
-  overflow: hidden;
-  flex-wrap: nowrap; }
+  overflow: hidden; }
   #menu.active {
     height: 60px; }
-    @media (max-width: 768px) {
+    @media screen and (max-width: 768px) {
       #menu.active {
         height: 120px;
+        -ms-flex-wrap: wrap;
         flex-wrap: wrap; } }
   #menu .menu-item {
     border-left: 2px solid rgba(0, 0, 0, 0.3);
@@ -63,8 +66,11 @@ body {
   opacity: 0;
   z-index: 100;
   padding: 30px;
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-pack: center;
   justify-content: center;
+  -ms-flex-align: center;
   align-items: center; }
   #overlay.active {
     visibility: visible;
@@ -82,12 +88,15 @@ body {
       font-size: 20px;
       font-weight: bold; }
     #overlay .popup #popup-header {
+      display: -ms-flexbox;
       display: flex;
+      -ms-flex-pack: justify;
       justify-content: space-between;
+      -ms-flex-wrap: wrap;
       flex-wrap: wrap; }
       #overlay .popup #popup-header #add-photo {
-        width: 194px;
         height: 194px;
+        width: 194px;
         border: 2px solid gray;
         position: relative;
         cursor: pointer;
@@ -127,9 +136,13 @@ body {
           bottom: 0;
           margin: auto; }
       #overlay .popup #popup-header #popup-inputs {
+        -ms-flex: 1;
         flex: 1; }
         #overlay .popup #popup-header #popup-inputs .date-container {
+          display: -ms-flexbox;
           display: flex; }
+          #overlay .popup #popup-header #popup-inputs .date-container input {
+            padding-left: 5px; }
           #overlay .popup #popup-header #popup-inputs .date-container label {
             padding-right: 20px; }
         #overlay .popup #popup-header #popup-inputs label {
@@ -150,6 +163,10 @@ body {
           height: 100%;
           display: block;
           margin-top: 15px; }
+      @media screen and (max-width: 768px) {
+        #overlay .popup #popup-header {
+          -ms-flex-direction: column;
+          flex-direction: column; } }
     #overlay .popup #cancel {
       position: absolute;
       bottom: 20px;
@@ -178,7 +195,9 @@ body {
         outline: none; }
       #overlay .popup #create-event:hover {
         border-color: dodgerblue; }
-  @media (max-width: 420px) {
+    #overlay .popup button {
+      cursor: pointer; }
+  @media screen and (max-width: 420px) {
     #overlay {
       padding: 10px; }
       #overlay #popup-header {
@@ -258,11 +277,15 @@ body {
     background-color: #f4f4f4; }
 
 .eventContainer {
+  display: -ms-flexbox;
   display: flex;
+  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
+  -ms-flex-pack: end;
   justify-content: flex-end;
   width: 300px; }
   .eventContainer .eventDescription {
+    -ms-flex: 1 100%;
     flex: 1 100%;
     resize: none;
     margin: 10px 0;
@@ -272,9 +295,35 @@ body {
     .eventContainer .eventDescription:focus {
       outline: none; }
 
+.popup-header {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: justify;
+  justify-content: space-between; }
+  .popup-header .img-wrapper {
+    -ms-flex: 1 0 0px;
+    flex: 1 0 0;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    min-width: 100px; }
+    .popup-header .img-wrapper img {
+      width: 100%;
+      height: auto; }
+  .popup-header .popup-header-content {
+    -ms-flex: 2 0 0px;
+    flex: 2 0 0;
+    min-width: 100px; }
+    .popup-header .popup-header-content p {
+      margin: 5px 0; }
+
 .leaflet-pane.leaflet-popup-pane .leaflet-popup-content-wrapper {
-  padding: 5px 10px;
-  padding-bottom: 15px; }
+  padding: 20px;
+  padding-bottom: 25px;
+  padding-right: 25px; }
+  .leaflet-pane.leaflet-popup-pane .leaflet-popup-content-wrapper .leaflet-popup-content {
+    margin: 0; }
   .leaflet-pane.leaflet-popup-pane .leaflet-popup-content-wrapper .popup-btn {
     position: absolute;
     right: 5px;
@@ -318,3 +367,6 @@ body {
 .leaflet-top.leaflet-left .search-cancel {
   right: 31px;
   top: 3px; }
+
+.ui-loader {
+  display: none; }

@@ -22,17 +22,22 @@ body {
 	background-color: white;
 
 
+	display: -ms-flexbox;
+
+
 	display: flex;
+	-ms-flex-align: center;
 	align-items: center;
+	-ms-flex-pack: justify;
 	justify-content: space-between;
 	overflow: hidden;
-	flex-wrap: nowrap;
 
 	&.active {
 		height: 60px;
 
-		@media (max-width: 768px) {
+		@media screen and (max-width: 768px) {
 			height: 120px;
+			-ms-flex-wrap: wrap;
 			flex-wrap: wrap;
 		}
 	}
@@ -84,8 +89,11 @@ body {
 	opacity: 0;
 	z-index: 100;
 	padding: 30px;
+	display: -ms-flexbox;
 	display: flex;
+	-ms-flex-pack: center;
 	justify-content: center;
+	-ms-flex-align: center;
 	align-items: center;
 
 	&.active {
@@ -110,13 +118,17 @@ body {
 
 		#popup-header {
 
+			display: -ms-flexbox;
+
 			display: flex;
+			-ms-flex-pack: justify;
 			justify-content: space-between;
+			-ms-flex-wrap: wrap;
 			flex-wrap: wrap;
 
 			#add-photo {
-				width: 194px;
 				height: 194px;
+				width: 194px;
 				border: 2px solid gray;
 				position: relative;
 				cursor: pointer;
@@ -169,10 +181,16 @@ body {
 				}
 			}
 			#popup-inputs {
+				-ms-flex: 1;
 				flex: 1;
 
 				.date-container {
+					display: -ms-flexbox;
 					display: flex;
+
+					input {
+						padding-left: 5px;
+					}
 
 					label {
 						padding-right: 20px;
@@ -204,53 +222,62 @@ body {
 					margin-top: 15px;
 				}
 			}
-		}
 
-		#cancel {
-			position: absolute;
-			bottom: 20px;
-			right: 20px;
-			width: 80px;
-			font-size: 16px;
-			background-color: white;
-			border-radius: 5px;
-			border: 1px solid gray;
-			cursor: pointer;
+			@media screen and (max-width: 768px) {
+				-ms-flex-direction: column;
+				flex-direction: column;
+			}
+}
 
-			&:focus {
-				outline: none;
-			}
-			&:hover {
-				border-color: dodgerblue;
-			}
-		}
-		#create-event {
-			position: absolute;
-			bottom: 20px;
-			left: 20px;
-			width: 80px;
-			font-size: 16px;
-			background-color: white;
-			border-radius: 5px;
-			border: 1px solid gray;
-			cursor: pointer;
+#cancel {
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	width: 80px;
+	font-size: 16px;
+	background-color: white;
+	border-radius: 5px;
+	border: 1px solid gray;
+	cursor: pointer;
 
-			&:focus {
-				outline: none;
-			}
-			&:hover {
-				border-color: dodgerblue;
-			}
-		}
+	&:focus {
+		outline: none;
 	}
-
-	@media (max-width: 420px) {
-		padding: 10px;
-
-		#popup-header {
-			padding: 0;
-		}
+	&:hover {
+		border-color: dodgerblue;
 	}
+}
+#create-event {
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	width: 80px;
+	font-size: 16px;
+	background-color: white;
+	border-radius: 5px;
+	border: 1px solid gray;
+	cursor: pointer;
+
+	&:focus {
+		outline: none;
+	}
+	&:hover {
+		border-color: dodgerblue;
+	}
+}
+
+		button {
+			cursor: pointer;
+		}
+}
+
+@media  screen and(max-width: 420px) {
+	padding: 10px;
+
+	#popup-header {
+		padding: 0;
+	}
+}
 }
 
 .mapid-wrapper {
@@ -323,11 +350,11 @@ body {
 @keyframes spin {
 	from {
 		transform:
-		rotate(0deg);
+			rotate(0deg);
 	}to{
-	transform:
-	     rotate(360deg);
-	     }
+		 transform:
+			 rotate(360deg);
+	 }
 }
 
 .clearMarkers {
@@ -361,12 +388,16 @@ body {
 ///////////////////////////////////////////////////////
 
 .eventContainer {
+	display: -ms-flexbox;
 	display: flex;
+	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
+	-ms-flex-pack: end;
 	justify-content: flex-end;
 	width: 300px;
 
 	.eventDescription {
+		-ms-flex: 1 100%;
 		flex: 1 100%;
 		resize: none;
 		margin: 10px 0;
@@ -381,12 +412,54 @@ body {
 }
 // Leaflet Popups
 
+.popup-header {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+
+	.img-wrapper {
+
+		-ms-flex: 1 0 0px;
+
+		flex: 1 0 0;
+
+		display: -ms-flexbox;
+
+		display: flex;
+		-ms-flex-align: center;
+		align-items: center;
+
+		min-width: 100px;
+
+		img {
+			width: 100%;
+			height: auto;
+		}
+	}
+
+	.popup-header-content {
+		-ms-flex: 2 0 0px;
+		flex: 2 0 0;
+		min-width: 100px;
+
+		p {
+			margin: 5px 0;
+		}
+	}
+}
+
 .leaflet-pane.leaflet-popup-pane {
 
 	.leaflet-popup-content-wrapper {
 
-		padding: 5px 10px;
-		padding-bottom: 15px;
+		padding: 20px;
+		padding-bottom: 25px;
+		padding-right: 25px;
+
+		.leaflet-popup-content {
+			margin: 0;
+		}
 
 		.popup-btn {
 			position: absolute;
@@ -404,7 +477,7 @@ body {
 }
 
 .leaflet-routing-geocoders  {
-	//display: none;
+
 }
 
 .hidden {
@@ -458,3 +531,6 @@ body {
 	}
 }
 
+.ui-loader {
+	display: none;
+}

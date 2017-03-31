@@ -1,18 +1,59 @@
 import Location from './location';
 
+function base64ToArrayBuffer(base64) {
+  var binary_string =  window.atob(base64);
+  var len = binary_string.length;
+  var bytes = new Uint8Array( len );
+  for (var i = 0; i < len; i++)        {
+    bytes[i] = binary_string.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
 class App {
   constructor() {
-    console.log('App');
     this.init();
     this.initHandlers();
   }
+
+  XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
+  xhr = new this.XHR();
 
   markersList = {};
   DELAY = 175;
   clicks = 0;
   timer = null;
-  
+  imgUrl = null;
+
+  //server variables
+
+  header = new Headers({
+    'Content-Type': 'application/json',
+    'Accept' : 'application/json'
+  });
+
+  path = 'http://localhost:9000';
+
   init() {
+
+    ////////////////////////////////////
+
+    // запрос на другой домен :)
+
+    this.xhr.open('GET', this.path + "/pins", true);
+
+    this.xhr.onload = function() {
+      console.log( this.responseText );
+    };
+
+    this.xhr.onerror = function() {
+      console.log( 'Ошибка ' + this.status );
+    };
+
+    this.xhr.send();
+
+    ////////////////////////////////////
+
     const ref = this;
     new Location(this);
     
@@ -59,6 +100,7 @@ class App {
     function onPositionNotResived(positionError) {
       console.log(positionError);
     }
+
 /////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////   Menu Staff  /////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,6 +157,18 @@ class App {
   }
 
   initHandlers() {
+
+    document.
+        getElementById('from')
+        .addEventListener('click', this.outputDateFrom.bind(this));
+
+    document.
+    getElementById('until')
+        .addEventListener('click', this.outputDateUntil.bind(this));
+
+    document.
+    getElementById('create-event')
+        .addEventListener('click', this.createCustomPin.bind(this));
 
     document.
         getElementById('popup-input-file')
@@ -181,19 +235,52 @@ class App {
     };
   }
 
-  notifyUser(message) {
-    cordova.plugins.notification.local.schedule({
-      id: 'ID-'+Date.now(),
-      at: new Date(new Date().getTime() + 1000),// now + 1s
-      title: 'TEST',
-      text: message,
-      sound: "file://sounds/beep.wav"
+  calendarOutput(id){
+
+  try {
+    var options = {
+      date: new Date(),
+      mode: 'date',
+      allowOldDates: true,
+      allowFutureDates: true
+    };
+
+    datePicker.show(options, function (date) {
+        document.getElementById(id).value = ('0' + date.getDate()).slice(-2) + "/" + ('0' + (date.getMonth() + 1)).slice(-2) + "/" + date.getFullYear();
     });
 
-    const beep = new Media("sounds/beep.wav");
-    beep.play();
+  }
+  catch(e) {
+    console.log('Data picker not for browsers. DA!');
+  }
 
-    navigator.notification.vibrate(2500);
+}
+
+  outputDateFrom() {
+    this.calendarOutput('from');
+  }
+  outputDateUntil() {
+    this.calendarOutput('until');
+  }
+
+  notifyUser(message) {
+    try {
+      cordova.plugins.notification.local.schedule({
+        id: 'ID-'+Date.now(),
+        at: new Date(new Date().getTime() + 1000),// now + 1s
+        title: 'TEST',
+        text: message,
+        sound: none
+      });
+
+      navigator.notification.vibrate(2500);
+
+      const beep = new Media("sounds/beep.wav");
+      beep.play();
+    }
+    catch(e) {
+      console.log("Notifications are not avalible in browser. DA!");
+    }
   }
 
   overlappingWithEvents() {
@@ -248,6 +335,8 @@ class App {
 
   addMarker(latlng, description, markerId) {
     const ref = this;
+    const descriptionHtml = document.createElement('div');
+    descriptionHtml.innerHTML = description;
     if (this.markersList[markerId]) {
       this.mymap.removeLayer(this.markersList[markerId].marker);
       delete this.markersList[markerId];
@@ -257,7 +346,18 @@ class App {
 
     marker.id = markerId;
 
-    marker.bindPopup(description + '<button class="popup-btn">Edit</button>');
+    if (markerId != "YourLocation" && markerId != "flag") {
+      const wrapper = document.createElement("div");
+      var btn = document.createElement("button");
+      btn.className = "popup-btn";
+      btn.onclick = function (id, e) {
+        console.log('id=', id);
+      }.bind(this, markerId);
+      wrapper.appendChild(descriptionHtml);
+      wrapper.appendChild(btn);
+
+      marker.bindPopup(wrapper);
+    }
 
     marker.on('click', (e) => {
       this.setDestination(e.latlng);
@@ -310,6 +410,18 @@ class App {
     this.addMarker(latlng, description, id);
     this.mymap.removeLayer(this.markersList['flag'].marker);
     delete this.markersList['flag'];
+
+    fetch(this.path + "/addpin", {
+      method: 'post',
+      mode: 'cors',
+      headers: this.header,
+      body: JSON.stringify({
+        lat: latlng.lat,
+        lng: latlng.lng,
+        description: description
+      })
+    });
+
     this.closeMenu();
   }
 
@@ -318,7 +430,15 @@ class App {
   }
 
   hidePopUp() {
+    document.getElementById("title").value   = '';
+    document.getElementById("from").value =    '';
+    document.getElementById("until").value =   '';
+    document.getElementById("event-description").value = '';
     document.getElementById("overlay").className = '';
+    document.getElementById('popup-file-img').src = "";
+    document.getElementById('file-add-ditails').className = '';
+    document.getElementById('popup-input-file').value = "";
+    this.imgUrl = undefined;
   }
 
   closeMenu() {
@@ -367,6 +487,11 @@ class App {
 
       ref.routing.setWaypoints([]);
 
+      fetch(this.path + "/clearAll", {
+        method: 'post',
+        mode: 'cors'
+      });
+
       swal(
         'Deleted!',
         'Your file has been deleted.',
@@ -385,11 +510,83 @@ class App {
     reader.onloadend = () => {
       document.getElementById('popup-file-img').src = reader.result;
       document.getElementById('file-add-ditails').className = 'hidden';
+      this.imgUrl = reader.result;
     };
 
     reader.readAsDataURL(file);
   }
 
+  createCustomPin(event) {
+    var photo = "";
+    var startsAt = "";
+    var endsAt = "";
+    var decodedImg = "";
+
+    if( document.getElementById('from').value != "") {
+      startsAt =
+          "<p class='popup-date-start'>"        +
+          "Starts at: "                         +
+          document.getElementById('from').value +
+          "</p>";
+    }
+
+    if( document.getElementById('until').value != "") {
+      endsAt =
+          "<p class='popup-date-end'>"           +
+          "Ends at: "                            +
+          document.getElementById('until').value +
+          "</p>"
+    }
+
+    if(this.imgUrl) {
+      photo =
+          "<div class='img-wrapper'>"         +
+          "<img src='"+ this.imgUrl + "'/>"   +
+          "</div>" ;
+    }
+
+    var popupContent =
+        "<div class='popup-wrapper'>"             +
+          "<div class='popup-header'>"            +
+              photo                               +
+            "<div class='popup-header-content'>"  +
+              "<h2 class='popup-title'>"          +
+                document.getElementById('title').value +
+              "</h2>"                             +
+              startsAt                            +
+              endsAt                              +
+            "</div>"                              +
+          "</div>"                                +
+          "<div class='popup-content'>"           +
+            "<p class='popup-description'>"       +
+              document.getElementById('event-description').value +
+            "</p>"                                +
+          "</div>"                                +
+        "</div>";
+
+    this.addMarker(this.markersList['flag'].marker.getLatLng(), popupContent, this.markersList['flag'].marker.getLatLng().lat + "" + this.markersList['flag'].marker.getLatLng().lng);
+
+    fetch(this.path + "/addpin", {
+      method: 'post',
+      mode: 'cors',
+      headers: this.header,
+      body: JSON.stringify({
+        id: 21,
+        lat: this.markersList['flag'].marker.getLatLng().lat,
+        lng: this.markersList['flag'].marker.getLatLng().lng,
+        title: document.getElementById('title').value,
+        dateFrom: document.getElementById('from').value,
+        dateUntil: document.getElementById('until').value,
+        description: document.getElementById('event-description').value,
+        img: this.imgUrl
+      })
+    });
+
+    this.hidePopUp();
+
+    this.mymap.removeLayer(this.markersList['flag'].marker);
+    delete this.markersList['flag'];
+  }
 
   openMenu() {
     document.getElementById("menu").className = 'active';
@@ -397,3 +594,4 @@ class App {
 }
 
 new App();
+

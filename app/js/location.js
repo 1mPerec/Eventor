@@ -19,6 +19,10 @@ export default class Location {
 
       ref.App.onPositionResived(location);
 
+      $cordovaDatePicker.show(options).then(function(date){
+        alert(date);
+      });
+
       // Must signal completion of your callbackFn.
       bgGeo.finish(taskId);
     };

@@ -18,7 +18,6 @@
     <plugin name="cordova-plugin-media-capture" source="npm" spec="~1.2.0" />
     <plugin name="cordova-plugin-console" source="npm" spec="~1.0.2" />
     <plugin name="cordova-plugin-contacts" source="npm" spec="~2.0.1" />
-    <plugin name="cordova-plugin-device" source="npm" spec="~1.1.1" />
     <plugin name="cordova-plugin-device-motion" source="npm" spec="~1.2.0" />
     <plugin name="cordova-plugin-device-orientation" source="npm" spec="~1.0.2" />
     <plugin name="cordova-plugin-file" source="npm" spec="~4.1.1" />
@@ -130,4 +129,6 @@
     <plugin name="cordova-plugin-whitelist" spec="~1.2.2" />
     <plugin name="de.appplant.cordova.plugin.local-notification" spec="https://github.com/acianti/cordova-plugin-local-notifications" />
     <plugin name="cordova-plugin-media" spec="~2.2.0" />
+    <gap:plugin name="cordova-plugin-datepicker" source="npm" />
+    <plugin name="cordova-plugin-device" spec="~1.1.4" />
 </widget>

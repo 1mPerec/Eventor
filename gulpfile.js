@@ -5,6 +5,7 @@ var child_process = require('child_process');
 var runSequence = require('run-sequence');
 var notifier = require('node-notifier');
 var webpack = require('gulp-webpack');
+const autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('concatJs', function () {
     return gulp.src([
@@ -52,7 +53,7 @@ gulp.task('runios', function (done) {
 
 gulp.task('assets', function (callback) {
     runSequence('sass',
-            ['concatJs', 'concatCss', 'copyfiles'],
+            ['autoprefix', 'concatJs', 'concatCss', 'copyfiles'],
     callback
     )
 });
@@ -84,3 +85,11 @@ gulp.task('watch', function () {
     gulp.watch('app/js/*.js', ['concatJs']);
 });
 
+gulp.task('autoprefix', () =>
+    gulp.src('app/scss/main.scss')
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }))
+        .pipe(gulp.dest('app/scss'))
+);
