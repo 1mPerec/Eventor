@@ -8,6 +8,7 @@
         Perception Box
     </author>
     <content src="index.html" />
+    
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="16" />
     <feature name="Notification">
@@ -131,4 +132,8 @@
     <plugin name="cordova-plugin-media" spec="~2.2.0" />
     <gap:plugin name="cordova-plugin-datepicker" source="npm" />
     <plugin name="cordova-plugin-device" spec="~1.1.4" />
+    <plugin name="cordova-plugin-facebook4" spec="~1.7.4">
+        <variable name="APP_ID" value="200896793760021" />
+        <variable name="APP_NAME" value="eventor" />
+    </plugin>
 </widget>

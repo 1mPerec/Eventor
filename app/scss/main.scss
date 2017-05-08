@@ -383,6 +383,32 @@ body {
 	}
 }
 
+.facebook {
+
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	z-index: 10;
+
+	width: 34px;
+	height: 34px;
+
+	border-radius: 4px;
+	background: white no-repeat center url('images/facebook.svg');
+	background-size: 34px 34px;
+	border: 2px solid rgba(0, 0, 0, 0.3);
+	font-weight: 600;
+	cursor: pointer;
+
+	&:focus {
+		outline: none;
+	}
+
+	&:hover {
+		border: 2px solid dodgerblue;
+	}
+}
+
 /////////////////////////////////////////////////////////
 //////////////////////   Events   //////////////////////
 ///////////////////////////////////////////////////////
@@ -431,6 +457,7 @@ body {
 		align-items: center;
 
 		min-width: 100px;
+		margin-right: 10px;
 
 		img {
 			width: 100%;

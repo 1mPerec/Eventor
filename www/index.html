@@ -15,7 +15,9 @@
     <div class="mapid-wrapper">
         <div id="mapid" class="map"></div>
         <button class="clearMarkers" id="clear-markers"></button>
-
+        <a>
+            <button class="facebook" id="facebook"></button>
+        </a>
         <button id="location-btn" class="spinning"></button>
 
     </div>
@@ -30,14 +32,14 @@
     <div id="overlay">
         <div class="popup">
             <h2 id="popup-title">Event Options</h2>
-            <header id="popup-header">
+            <form id="popup-header">
                 <label id="add-photo">
                     <div id="file-add-ditails">
                         <svg id="add" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.11 64.11"><defs><style>.cls-1{fill:#606060;stroke:#424242;stroke-miterlimit:10;}</style></defs><title>add</title><path id="plus-icon" class="cls-1" d="M62.52,23.53H44V5a2.8,2.8,0,0,0-2.8-2.8H26.31A2.8,2.8,0,0,0,23.5,5V23.53H5a2.8,2.8,0,0,0-2.8,2.8V41.25A2.8,2.8,0,0,0,5,44.05H23.5V62.55a2.8,2.8,0,0,0,2.8,2.8H41.23a2.8,2.8,0,0,0,2.8-2.8V44.05H62.52a2.8,2.8,0,0,0,2.8-2.8V26.33A2.8,2.8,0,0,0,62.52,23.53Z" transform="translate(-1.71 -1.74)"/></svg>
                         <span class="add-img-tag">Add img</span>
                     </div>
                     <img id="popup-file-img"/>
-                    <input type="file" id="popup-input-file" class="input-file"/>
+                    <input type="file" id="popup-input-file" class="input-file" name="sampleFile"/>
                 </label>
                 <div id="popup-inputs">
                     <label for="title">Title</label>
@@ -54,7 +56,7 @@
                     <label for="event-description">Description of the event</label>
                     <textarea id="event-description"></textarea>
                 </div>
-            </header>
+            </form>
             <button id="create-event">create</button>
             <button id="cancel">cancel</button>
         </div>

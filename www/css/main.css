@@ -276,6 +276,24 @@ body {
   .clearMarkers:hover {
     background-color: #f4f4f4; }
 
+.facebook {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+  background: white no-repeat center url("images/facebook.svg");
+  background-size: 34px 34px;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  font-weight: 600;
+  cursor: pointer; }
+  .facebook:focus {
+    outline: none; }
+  .facebook:hover {
+    border: 2px solid dodgerblue; }
+
 .eventContainer {
   display: -ms-flexbox;
   display: flex;
@@ -307,7 +325,8 @@ body {
     display: flex;
     -ms-flex-align: center;
     align-items: center;
-    min-width: 100px; }
+    min-width: 100px;
+    margin-right: 10px; }
     .popup-header .img-wrapper img {
       width: 100%;
       height: auto; }

@@ -32,7 +32,7 @@ class App {
     'Accept' : 'application/json'
   });
 
-  path = 'http://localhost:9000';
+  path = 'http://localhost:9001';
 
   init() {
 
@@ -41,6 +41,7 @@ class App {
     // запрос на другой домен :)
 
     this.xhr.open('GET', this.path + "/pins", true);
+    this.xhr.open('GET', this.path + "/users", true);
 
     this.xhr.onload = function() {
       console.log( this.responseText );
@@ -171,7 +172,7 @@ class App {
         .addEventListener('click', this.createCustomPin.bind(this));
 
     document.
-        getElementById('popup-input-file')
+       getElementById('popup-input-file')
         .addEventListener('change', this._handleImageChange.bind(this));
 
     document
@@ -193,6 +194,10 @@ class App {
     document
       .getElementById('clear-markers')
       .addEventListener('click', this.clearMarkers.bind(this));
+
+    document
+        .getElementById('facebook')
+        .addEventListener('click', this.authFacebook.bind(this));
 
     this.mymap.on('click', (e) => {
 
@@ -418,7 +423,8 @@ class App {
       body: JSON.stringify({
         lat: latlng.lat,
         lng: latlng.lng,
-        description: description
+        description: description,
+        id: id
       })
     });
 
@@ -501,8 +507,19 @@ class App {
     });
   }
 
-  _handleImageChange(event) {
+  authFacebook() {
 
+      facebookConnectPlugin.login(['public_profile'], function(data) {
+
+          facebookConnectPlugin.api('me/?fields=id,name', ['public_profile'], function (res) {
+              console.log(res);
+          },
+              function (error) {
+          });
+      })
+  }
+
+  _handleImageChange(event) {
     event.preventDefault();
     const reader = new FileReader();
     const file = event.target.files[0];
@@ -517,6 +534,7 @@ class App {
   }
 
   createCustomPin(event) {
+
     var photo = "";
     var startsAt = "";
     var endsAt = "";
@@ -571,7 +589,7 @@ class App {
       mode: 'cors',
       headers: this.header,
       body: JSON.stringify({
-        id: 21,
+        id:  this.markersList['flag'].marker.getLatLng().lat + "" + this.markersList['flag'].marker.getLatLng().lng,
         lat: this.markersList['flag'].marker.getLatLng().lat,
         lng: this.markersList['flag'].marker.getLatLng().lng,
         title: document.getElementById('title').value,
