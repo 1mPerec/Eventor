@@ -13,6 +13,7 @@ gulp.task('concatJs', function () {
         'node_modules/leaflet/dist/*.js',
         'node_modules/leaflet-routing-machine/dist/*.js',
         'node_modules/leaflet-search/dist/leaflet-search.min.js',
+        'node_modules/leaflet-easybutton/src/easy-button.js',
         'tmp/*.js'
         ])
         .pipe(concat('bundle.js'))
@@ -25,6 +26,7 @@ gulp.task('concatCss', function () {
         'node_modules/leaflet/dist/*.css',
         'node_modules/leaflet-routing-machine/dist/*.css',
         'node_modules/sweetalert2/dist/sweetalert2.css',
+        'node_modules/leaflet-easybutton/src/easy-button.css',
         'node_modules/leaflet-search/dist/leaflet-search.min.css'
     ])
         .pipe(concat('bundle.css'))
@@ -42,13 +44,19 @@ gulp.task('sass', function () {
         .pipe(gulp.dest('./www/css'));
 });
 
-gulp.task('runios', function (done) {
+gulp.task('ibuild', function (done) {
     console.log('build phonegap build ios');
     child_process.execFile('phonegap', ['build', 'ios'], function () {
         console.log('done phonegap build ios');
         notifier.notify({ title: 'IOS Build', message: 'Done' });
         done();
     });
+});
+
+gulp.task('cbuild', function (done) {
+    runSequence('build',
+        ['ibuild'],
+        done);
 });
 
 gulp.task('assets', function (callback) {

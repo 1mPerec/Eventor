@@ -12,13 +12,29 @@
 </head>
 <body>
 
+<div id="sidebar" class="sidebar">
+    <ul>
+        <li id="facebook">log in to facebook</li>
+        <li id="clear">clear markers</li>
+        <label for='bgGeolocation'>
+            <li>background geolocation
+                <div class="switch">
+                    <input type="checkbox" id="bgGeolocation">
+                    <div class="slider"></div>
+                </div>
+            </li>
+        </label>
+        <li id="info">info</li>
+        <li id="closeSideMenu">close</li>
+    </ul>
+</div>
+
     <div class="mapid-wrapper">
-        <div id="mapid" class="map"></div>
-        <button class="clearMarkers" id="clear-markers"></button>
-        <a>
-            <button class="facebook" id="facebook"></button>
-        </a>
-        <button id="location-btn" class="spinning"></button>
+        <div id="mapid" class="map">
+
+            <button id="location-btn" class="spinning"></button>
+
+        </div>
 
     </div>
 
@@ -39,7 +55,7 @@
                         <span class="add-img-tag">Add img</span>
                     </div>
                     <img id="popup-file-img"/>
-                    <input type="file" id="popup-input-file" class="input-file" name="sampleFile"/>
+                    <input type="file" id="popup-input-file" accept="image/*" class="input-file"/>
                 </label>
                 <div id="popup-inputs">
                     <label for="title">Title</label>
@@ -64,9 +80,7 @@
 
     <!---------------Scripts--------------->
 
-
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script src="bundle.js"></script>
 

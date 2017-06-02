@@ -24,36 +24,36 @@ class App {
   clicks = 0;
   timer = null;
   imgUrl = null;
+  burgerMenu = null;
+  backgroundLocation = false;
 
   //server variables
 
-  header = new Headers({
-    'Content-Type': 'application/json',
-    'Accept' : 'application/json'
-  });
 
-  path = 'http://localhost:9001';
+  path = 'http://perceptionbox.io:9001';
+
+  ajax(url, type, data) {
+    const header = new Headers({
+      'Content-Type': 'application/json',
+      'Accept' : 'application/json'
+    });
+
+    const token = window.localStorage.getItem('authToken');
+    const userID = window.localStorage.getItem('userID');
+
+    if (token) {
+      header.append('authorization', 'Bearer ' + token);
+      header.append('userID', userID);
+    }
+    return fetch(url, {
+      method: type,
+      mode: 'cors',
+      headers: header,
+      body: JSON.stringify(data)
+    }).then((response) => response.json());
+  }
 
   init() {
-
-    ////////////////////////////////////
-
-    // запрос на другой домен :)
-
-    this.xhr.open('GET', this.path + "/pins", true);
-    this.xhr.open('GET', this.path + "/users", true);
-
-    this.xhr.onload = function() {
-      console.log( this.responseText );
-    };
-
-    this.xhr.onerror = function() {
-      console.log( 'Ошибка ' + this.status );
-    };
-
-    this.xhr.send();
-
-    ////////////////////////////////////
 
     const ref = this;
     new Location(this);
@@ -131,29 +131,59 @@ class App {
     });
   }
 
+  placePins() {
+
+    if(window.localStorage.getItem('userID')) {
+
+      this.ajax(this.path + '/pins','get').then((res) => {
+
+        var pins = res;
+
+        for (var i = 0; i < pins.length; i++) {
+
+            var latlng = {lat: pins[i].lat, lng: pins[i].lng};
+            this.addMarker(latlng, pins[i].description, pins[i].id);
+        }
+      });
+    }
+  }
+
   run() {
 
-    for (var i = 0; i < localStorage.length; i++) {
-
-      var id = localStorage.key(i);
-
-      var marker = localStorage.getItem(id);
-
-      marker = JSON.parse(marker);
-
-      if (id == 'lastSeenOn') {
-        this.mymap.setView(marker, 18);
-      }
-      else {
-        var latlng = {lat: marker.lat, lng: marker.lng};
-        this.addMarker(latlng, marker.description, id);
-      }
+    if(localStorage.getItem('toggle')) {
+      window.BackgroundGeolocation.start();
     }
 
-    if (window.File && window.FileReader && window.FileList && window.Blob) {
-      console.log('File API Works just fine');
-    } else {
-      console.log('File API не поддерживается данным браузером');
+    this.burgerMenu = L.easyButton({
+      id: 'burgerMenu',  // an id for the generated button
+      position: 'topright',      // inherited from L.Control -- the corner it goes in
+      type: 'replace',          // set to animate when you're comfy with css
+      leafletClasses: true,     // use leaflet classes to style the button?
+      states:[{                 // specify different icons and responses for your button
+        stateName: 'openMenu',
+        title: 'open menu',
+        icon: 'burger',
+        onClick: (button, map) =>{
+          document.getElementById('sidebar').className += ' active';
+          button.state('closeMenu');
+        }
+      },
+        {
+          stateName: 'closeMenu',
+          title: 'close menu',
+          icon: 'close',
+          onClick: function(button, map){
+            document.getElementById('sidebar').className = 'sidebar';
+            button.state('openMenu');
+          }
+        }
+      ]
+    });
+
+    this.burgerMenu.addTo( this.mymap );
+
+    if(window.localStorage.getItem('userID')) {
+      this.placePins();
     }
   }
 
@@ -191,13 +221,30 @@ class App {
       .getElementById('location-btn')
       .addEventListener('click', this.centerOnSelf.bind(this));
 
-    document
-      .getElementById('clear-markers')
-      .addEventListener('click', this.clearMarkers.bind(this));
+
+    // sidebar
 
     document
         .getElementById('facebook')
         .addEventListener('click', this.authFacebook.bind(this));
+
+    document
+        .getElementById('clear')
+        .addEventListener('click', this.clearMarkers.bind(this));
+
+    document
+        .getElementById('bgGeolocation')
+        .addEventListener('click', this.toggleGeolocation.bind(this));
+
+    document
+        .getElementById('info')
+        .addEventListener('click', this.toggleInfo.bind(this));
+
+    document
+        .getElementById('closeSideMenu')
+        .addEventListener('click', this.closeSideMenu.bind(this));
+
+
 
     this.mymap.on('click', (e) => {
 
@@ -271,20 +318,20 @@ class App {
   notifyUser(message) {
     try {
       cordova.plugins.notification.local.schedule({
-        id: 'ID-'+Date.now(),
+        id: Date.now(),
         at: new Date(new Date().getTime() + 1000),// now + 1s
-        title: 'TEST',
-        text: message,
-        sound: none
+        title: 'Notification',
+        text: message
       });
 
       navigator.notification.vibrate(2500);
 
       const beep = new Media("sounds/beep.wav");
+      console.log(beep);
       beep.play();
     }
     catch(e) {
-      console.log("Notifications are not avalible in browser. DA!");
+      console.log("error: ", e);
     }
   }
 
@@ -354,12 +401,10 @@ class App {
     if (markerId != "YourLocation" && markerId != "flag") {
       const wrapper = document.createElement("div");
       var btn = document.createElement("button");
+      btn.innerHTML = "create";
       btn.className = "popup-btn";
-      btn.onclick = function (id, e) {
-        console.log('id=', id);
-      }.bind(this, markerId);
+      btn.onclick = function (id, e) {}.bind(this, markerId);
       wrapper.appendChild(descriptionHtml);
-      wrapper.appendChild(btn);
 
       marker.bindPopup(wrapper);
     }
@@ -368,12 +413,14 @@ class App {
       this.setDestination(e.latlng);
     });
 
-    marker.on('contextmenu', function (e) {
+    marker.on('contextmenu', function(e) {
+
+      ref.ajax(ref.path + "/removepin/" + this.id, 'post', {});
+
       ref.mymap.removeLayer(this);
       ref.mymap.removeLayer(ref.markersList[this.id].radius);
-      localStorage.removeItem(this.id);
-      delete ref.markersList[this.id];
 
+      delete ref.markersList[this.id];
 
       if (ref.routing.getWaypoints()[1].latLng &&
         e.latlng.lat == ref.routing.getWaypoints()[1].latLng.lat &&
@@ -383,10 +430,7 @@ class App {
       }
     });
 
-    var StorageObject = { 'lat': latlng.lat, 'lng': latlng.lng, 'description': description};
-
     if (markerId != 'YourLocation') {
-      localStorage.setItem(markerId, JSON.stringify(StorageObject));
       var radius = L.circle([latlng.lat, latlng.lng], {
         fillOpacity: 0.1,
         fillColor: 'red',
@@ -409,27 +453,39 @@ class App {
    * Add Pin
    */
   savePin() {
-    var latlng = this.markersList['flag'].marker.getLatLng();
-    var description = document.getElementById('marker-description').value;
-    var id = latlng.lat + '' + latlng.lng;
-    this.addMarker(latlng, description, id);
-    this.mymap.removeLayer(this.markersList['flag'].marker);
-    delete this.markersList['flag'];
 
-    fetch(this.path + "/addpin", {
-      method: 'post',
-      mode: 'cors',
-      headers: this.header,
-      body: JSON.stringify({
+    if(window.localStorage.getItem('userID')) {
+
+      var latlng = this.markersList['flag'].marker.getLatLng();
+      var description = document.getElementById('marker-description').value;
+      var id = latlng.lat + '' + latlng.lng;
+      this.addMarker(latlng, description, id);
+      this.mymap.removeLayer(this.markersList['flag'].marker);
+      delete this.markersList['flag'];
+
+      this.ajax(this.path + '/addpin', 'post', {
         lat: latlng.lat,
         lng: latlng.lng,
         description: description,
-        id: id
-      })
-    });
+        id: id,
+        author: window.localStorage.getItem('userID')
+      });
 
-    this.closeMenu();
+      this.closeMenu();
+    }
+
+    else {
+      swal({
+        title: 'You should log in first',
+        html: $('<div>')
+            .addClass('some-class')
+            .text('login with your facebook account'),
+        animation: false,
+        customClass: 'animated tada'
+      })
+    }
   }
+
 
   showPopUp() {
     document.getElementById("overlay").className = 'active';
@@ -457,6 +513,7 @@ class App {
   }
 
   clearMarkers() {
+
     let ref = this;
     swal({
       title: 'Are you sure?',
@@ -476,9 +533,15 @@ class App {
         }
 
       });
-      localStorage.clear();
+
+      for(var i = 0; i < window.localStorage.length; i++) {
+        if( (window.localStorage.key(i) != 'lastSeenOn') && (window.localStorage.key(i) != 'authToken'))  {
+          delete window.localStorage[i];
+        }
+      }
+
       if (ref.lastSeenOn) {
-        localStorage.setItem('lastSeenOn', JSON.stringify(ref.lastSeenOn));
+        window.localStorage.setItem('lastSeenOn', JSON.stringify(ref.lastSeenOn));
       }
 
       var childNodes = document.getElementsByTagName("input");
@@ -493,10 +556,7 @@ class App {
 
       ref.routing.setWaypoints([]);
 
-      fetch(this.path + "/clearAll", {
-        method: 'post',
-        mode: 'cors'
-      });
+      this.ajax(this.path + '/clearAll', 'post', {});
 
       swal(
         'Deleted!',
@@ -507,16 +567,75 @@ class App {
     });
   }
 
+  closeSideMenu() {
+    document.getElementById('sidebar').className = 'sidebar';
+    this.burgerMenu.state('openMenu');
+  }
+
+  toggleInfo() {
+
+  }
+
+  toggleGeolocation() {
+
+    var bgGeo = window.BackgroundGeolocation;
+
+    var toggle = document.getElementById('bgGeolocation');
+
+    if (toggle.checked) {
+      bgGeo.start();
+    } else {
+      bgGeo.stop();
+    }
+
+    cordova.plugins.diagnostic.getLocationAuthorizationStatus((result)=>{
+
+      if(result != 'authorized') {
+        toggle.checked = false;
+
+        
+      }
+      else {
+
+      }
+    }, (err)=> {
+      console.log(err);
+    });
+
+    window.localStorage.setItem('bgGeoEnabled', toggle);
+
+  }
+
+
+
   authFacebook() {
 
-      facebookConnectPlugin.login(['public_profile'], function(data) {
+      facebookConnectPlugin.login(['public_profile'], (data) => {
 
-          facebookConnectPlugin.api('me/?fields=id,name', ['public_profile'], function (res) {
-              console.log(res);
+          facebookConnectPlugin.api('me/?fields=id,name', ['public_profile'], (res) => {
+
+            window.localStorage.setItem('userID', res.id);
+
+            this.ajax(this.path + '/adduser', 'post', {
+              userID: res.id,
+              name: res.name
+            }).then((res) => {
+
+              console.log(res.token);
+
+              window.localStorage.setItem('authToken', res.token);
+
+              this.placePins();
+            });
+
           },
-              function (error) {
+              (error) => {
+                console.log('error', error);
+
           });
-      })
+      }, (error) => {
+        console.log('error', error);
+      });
   }
 
   _handleImageChange(event) {
@@ -584,20 +703,17 @@ class App {
 
     this.addMarker(this.markersList['flag'].marker.getLatLng(), popupContent, this.markersList['flag'].marker.getLatLng().lat + "" + this.markersList['flag'].marker.getLatLng().lng);
 
-    fetch(this.path + "/addpin", {
-      method: 'post',
-      mode: 'cors',
-      headers: this.header,
-      body: JSON.stringify({
-        id:  this.markersList['flag'].marker.getLatLng().lat + "" + this.markersList['flag'].marker.getLatLng().lng,
-        lat: this.markersList['flag'].marker.getLatLng().lat,
-        lng: this.markersList['flag'].marker.getLatLng().lng,
-        title: document.getElementById('title').value,
-        dateFrom: document.getElementById('from').value,
-        dateUntil: document.getElementById('until').value,
-        description: document.getElementById('event-description').value,
-        img: this.imgUrl
-      })
+    this.ajax(this.path + "/addpin", 'post', {
+
+      id:  this.markersList['flag'].marker.getLatLng().lat + "" + this.markersList['flag'].marker.getLatLng().lng,
+      lat: this.markersList['flag'].marker.getLatLng().lat,
+      lng: this.markersList['flag'].marker.getLatLng().lng,
+      title: document.getElementById('title').value,
+      dateFrom: document.getElementById('from').value,
+      dateUntil: document.getElementById('until').value,
+      description: document.getElementById('event-description').value,
+      img: this.imgUrl,
+      author: window.localStorage.getItem('userID')
     });
 
     this.hidePopUp();
@@ -612,4 +728,5 @@ class App {
 }
 
 new App();
+
 

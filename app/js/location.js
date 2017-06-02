@@ -6,7 +6,7 @@ export default class Location {
   
   init() {
     const ref = this;
-    cordova.plugins.notification.local.promptForPermission();
+    // cordova.plugins.notification.local.promptForPermission();
 
     var bgGeo = window.BackgroundGeolocation;
 
@@ -15,13 +15,12 @@ export default class Location {
       var coords = location.coords;
       var lat    = coords.latitude;
       var lng    = coords.longitude;
-      console.log('- Location: ', JSON.stringify(location));
 
       ref.App.onPositionResived(location);
 
-      $cordovaDatePicker.show(options).then(function(date){
-        alert(date);
-      });
+      // $cordovaDatePicker.show(options).then(function(date){
+      //   alert(date);
+      // });
 
       // Must signal completion of your callbackFn.
       bgGeo.finish(taskId);
@@ -37,7 +36,7 @@ export default class Location {
 
     // Fired whenever state changes from moving->stationary or vice-versa.
     bgGeo.on('motionchange', function(isMoving) {
-      console.log('- onMotionChange: ', isMoving);
+
     });
 
     // BackgroundGeoLocation is highly configurable.
@@ -57,19 +56,8 @@ export default class Location {
       // Application config
       debug: false,
       stopOnTerminate: false,
-      startOnBoot: true,
+      startOnBoot: false,
 
-      // HTTP / SQLite config
-      url: 'http://posttestserver.com/post.php?dir=cordova-background-geolocation',
-      method: 'POST',
-      autoSync: true,
-      maxDaysToPersist: 1,
-      headers: {
-        "X-FOO": "bar"
-      },
-      params: {
-        "auth_token": "maybe_your_server_authenticates_via_token_YES?"
-      }
     }, function(state) {
       // This callback is executed when the plugin is ready to use.
       if (!state.enabled) {

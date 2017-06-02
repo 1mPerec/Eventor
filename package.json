@@ -9,6 +9,7 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "leaflet": "^1.0.3",
+    "leaflet-easybutton": "^2.2.0",
     "leaflet-routing-machine": "^3.2.5",
     "leaflet-search": "^2.7.0",
     "sweetalert2": "^6.3.8"
