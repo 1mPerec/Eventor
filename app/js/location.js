@@ -18,10 +18,6 @@ export default class Location {
 
       ref.App.onPositionResived(location);
 
-      // $cordovaDatePicker.show(options).then(function(date){
-      //   alert(date);
-      // });
-
       // Must signal completion of your callbackFn.
       bgGeo.finish(taskId);
     };
@@ -39,7 +35,6 @@ export default class Location {
 
     });
 
-    // BackgroundGeoLocation is highly configurable.
     bgGeo.configure({
       // Geolocation config
       desiredAccuracy: 0,

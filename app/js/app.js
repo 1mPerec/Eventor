@@ -21,6 +21,7 @@ class App {
 
   markersList = {};
   DELAY = 175;
+  DELAY = 175;
   clicks = 0;
   timer = null;
   imgUrl = null;
@@ -164,6 +165,9 @@ class App {
         title: 'open menu',
         icon: 'burger',
         onClick: (button, map) =>{
+
+          document.getElementById('bgGeolocation').toggle = window.localStorage.getItem('bgGeo');
+
           document.getElementById('sidebar').className += ' active';
           button.state('closeMenu');
         }
@@ -449,9 +453,8 @@ class App {
     this.routing.spliceWaypoints(1, 1, latlng);
   }
 
-  /**
-   * Add Pin
-   */
+  // Add Pin
+
   savePin() {
 
     if(window.localStorage.getItem('userID')) {
@@ -476,7 +479,7 @@ class App {
 
     else {
       swal({
-        title: 'You should log in first',
+        title: 'You have to log in first',
         html: $('<div>')
             .addClass('some-class')
             .text('login with your facebook account'),
@@ -535,7 +538,11 @@ class App {
       });
 
       for(var i = 0; i < window.localStorage.length; i++) {
-        if( (window.localStorage.key(i) != 'lastSeenOn') && (window.localStorage.key(i) != 'authToken'))  {
+        if( (window.localStorage.key(i) != 'lastSeenOn')
+            && (window.localStorage.key(i) != 'authToken')
+            && (window.localStorage.key(i) != 'userID')
+            && (window.localStorage.key(i) != 'bgGeo')
+        )  {
           delete window.localStorage[i];
         }
       }
@@ -579,21 +586,20 @@ class App {
   toggleGeolocation() {
 
     var bgGeo = window.BackgroundGeolocation;
-
     var toggle = document.getElementById('bgGeolocation');
 
     if (toggle.checked) {
       bgGeo.start();
+      window.localStorage.setItem('bgGeo', true);
     } else {
       bgGeo.stop();
+      window.localStorage.setItem('bgGeo', false);
     }
 
     cordova.plugins.diagnostic.getLocationAuthorizationStatus((result)=>{
 
-      if(result != 'authorized') {
+      if(result != cordova.plugins.diagnostic.permissionStatus.GRANTED) {
         toggle.checked = false;
-
-        
       }
       else {
 
