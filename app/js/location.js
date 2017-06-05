@@ -55,8 +55,12 @@ export default class Location {
 
     }, function(state) {
       // This callback is executed when the plugin is ready to use.
-      if (!state.enabled) {
+      if (!state.enabled && window.localStorage.getItem('bgGeo')) {
         bgGeo.start();
+      }
+      else {
+        console.log('State is enabled', state.enabled);
+        console.log('Geo Location is on', window.localStorage.getItem('bgGeo'));
       }
     });
   }
