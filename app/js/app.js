@@ -8,12 +8,12 @@ class App {
 
   markersList = {};
   DELAY = 175;
-  DELAY = 175;
   clicks = 0;
   timer = null;
   imgUrl = null;
   burgerMenu = null;
   backgroundLocation = false;
+  flag = null;
 
   //server variables
 
@@ -96,8 +96,8 @@ class App {
     
 
     document.getElementById("close-btn").onclick = function () {
-      ref.mymap.removeLayer(this.markersList['flag'].marker);
-      delete this.markersList['flag'];
+      ref.mymap.removeLayer(this.flag);
+      this.flag = null;
       ref.closeMenu();
     };
 
@@ -107,12 +107,11 @@ class App {
 ///////////////////////////////////////////////////////////////////////////////
 
     this.You = L.icon({
-      iconUrl: 'images/You.gif',
-      iconSize:     [40, 42], // size of the icon
-      popupAnchor:  [0, -16] // point from which the popup shoulCreating Your Location Icond open relative to the iconAnchor
+      iconUrl: 'images/you.png',
+      iconSize:     [38, 50]
     });
 
-    this.Flag = L.icon({
+    this.FlagIco = L.icon({
       iconUrl: 'images/flag.png',
       iconSize:     [30, 50], // size of the icon
       popupAnchor:  [0, -16] // point from which the popup shoulCreating Your Location Icond open relative to the iconAnchor
@@ -136,6 +135,19 @@ class App {
     }
   }
 
+  logedInScreen() {
+    document.getElementById('logedIn').style.display = 'block';
+    document.getElementById('logedOut').style.display = 'none';
+    document.getElementById('facebook').style.display = 'none';
+    document.getElementById('userName').innerHTML = window.localStorage.getItem('userName');
+    document.getElementById('numberOfEvents').innerHTML = Object.keys(this.markersList).length - 1;
+  }
+  logedOutScreen() {
+    document.getElementById('logedIn').style.display = 'none';
+    document.getElementById('logedOut').style.display = 'block';
+    document.getElementById('facebook').style.display = 'block';
+  }
+
   run() {
 
     if(localStorage.getItem('toggle')) {
@@ -154,8 +166,15 @@ class App {
         onClick: (button, map) =>{
 
           document.getElementById('bgGeolocation').toggle = window.localStorage.getItem('bgGeo');
-
           document.getElementById('sidebar').className += ' active';
+          if(!window.localStorage.getItem('userID')) {
+            console.log('Sup?');
+            this.logedOutScreen();
+          }
+          else {
+            console.log('Sup!');
+            this.logedInScreen();
+          }
           button.state('closeMenu');
         }
       },
@@ -189,7 +208,7 @@ class App {
         .addEventListener('click', this.outputDateUntil.bind(this));
 
     document.
-    getElementById('create-event')
+    getElementById('create')
         .addEventListener('click', this.createCustomPin.bind(this));
 
     document.
@@ -205,12 +224,16 @@ class App {
         .addEventListener('click', this.showPopUp.bind(this));
 
     document
-        .getElementById('cancel')
+        .getElementById('closePopup')
         .addEventListener('click', this.hidePopUp.bind(this));
 
     document
       .getElementById('location-btn')
       .addEventListener('click', this.centerOnSelf.bind(this));
+
+    document
+        .getElementById('logout')
+        .addEventListener('click', this.logoutFacebook.bind(this));
 
 
     // sidebar
@@ -247,13 +270,13 @@ class App {
 
           var flag = L.marker(e.latlng).addTo(this.mymap);
           flag.id = 'flag';
-          flag.setIcon(this.Flag);
+          flag.setIcon(this.FlagIco);
 
-          if (this.markersList['flag']) {
-            this.mymap.removeLayer(this.markersList['flag'].marker);
+          if (this.flag) {
+            this.mymap.removeLayer(this.flag);
           }
 
-          this.markersList['flag'] = {marker: flag};
+          this.flag = flag;
 
           document.getElementById('marker-description').focus();
 
@@ -272,8 +295,8 @@ class App {
     });
 
     document.getElementById("close-btn").onclick = () => {
-      this.mymap.removeLayer(this.markersList['flag'].marker);
-      delete this.markersList['flag'];
+      this.mymap.removeLayer(this.flag);
+      this.flag = null;
       this.closeMenu();
     };
   }
@@ -397,12 +420,16 @@ class App {
       btn.onclick = function (id, e) {}.bind(this, markerId);
       wrapper.appendChild(descriptionHtml);
 
-      marker.bindPopup(wrapper);
-    }
+      var popup = marker.bindPopup(wrapper);
 
-    marker.on('click', (e) => {
-      this.setDestination(e.latlng);
-    });
+      popup.on('popupclose', (e) => {
+        ref.routing.getPlan().setWaypoints([ref.currentPosition.getLatLng()]);
+      });
+
+      marker.on('click', (e) => {
+        this.setDestination(e.latlng);
+      });
+    }
 
     marker.on('contextmenu', function(e) {
 
@@ -446,12 +473,12 @@ class App {
 
     if(window.localStorage.getItem('userID')) {
 
-      var latlng = this.markersList['flag'].marker.getLatLng();
+      var latlng = this.flag.getLatLng();
       var description = document.getElementById('marker-description').value;
       var id = latlng.lat + '' + latlng.lng;
       this.addMarker(latlng, description, id);
-      this.mymap.removeLayer(this.markersList['flag'].marker);
-      delete this.markersList['flag'];
+      this.mymap.removeLayer(this.flag);
+      this.flag = null;
 
       this.ajax(this.path + '/addpin', 'post', {
         lat: latlng.lat,
@@ -468,7 +495,6 @@ class App {
       swal({
         title: 'You have to log in first',
         html: $('<div>')
-            .addClass('some-class')
             .text('login with your facebook account'),
         animation: false,
         customClass: 'animated tada'
@@ -528,6 +554,7 @@ class App {
         if( (window.localStorage.key(i) != 'lastSeenOn')
             && (window.localStorage.key(i) != 'authToken')
             && (window.localStorage.key(i) != 'userID')
+            && (window.localStorage.key(i) != 'userName')
             && (window.localStorage.key(i) != 'bgGeo')
         )  {
           delete window.localStorage[i];
@@ -603,32 +630,49 @@ class App {
 
   authFacebook() {
 
+    if(!window.localStorage.getItem('userID')) {
+
       facebookConnectPlugin.login(['public_profile'], (data) => {
 
-          facebookConnectPlugin.api('me/?fields=id,name', ['public_profile'], (res) => {
+        facebookConnectPlugin.api('me/?fields=id,name', ['public_profile'], (res) => {
 
-            window.localStorage.setItem('userID', res.id);
+              window.localStorage.setItem('userID', res.id);
+              window.localStorage.setItem('userName', res.name);
 
-            this.ajax(this.path + '/adduser', 'post', {
-              userID: res.id,
-              name: res.name
-            }).then((res) => {
+              this.ajax(this.path + '/adduser', 'post', {
+                userID: res.id,
+                name: res.name
+              }).then((res) => {
 
-              console.log(res.token);
+                console.log(res.token);
 
-              window.localStorage.setItem('authToken', res.token);
+                window.localStorage.setItem('authToken', res.token);
 
-              this.placePins();
+                this.placePins();
+                this.logedInScreen();
+              });
+
+            },
+            (error) => {
+              console.log('error', error);
+
             });
-
-          },
-              (error) => {
-                console.log('error', error);
-
-          });
       }, (error) => {
         console.log('error', error);
       });
+    }
+  }
+
+  logoutFacebook() {
+    window.localStorage.removeItem('userID');
+    window.localStorage.removeItem('authToken');
+
+    swal({
+      title: 'You have loged out successfully'
+    });
+
+    facebookConnectPlugin.logout();
+    this.logedOutScreen();
   }
 
   _handleImageChange(event) {
@@ -647,72 +691,84 @@ class App {
 
   createCustomPin(event) {
 
-    var photo = "";
-    var startsAt = "";
-    var endsAt = "";
-    var decodedImg = "";
+    if(window.localStorage.getItem('userID')) {
+      var photo = "";
+      var startsAt = "";
+      var endsAt = "";
+      var decodedImg = "";
 
-    if( document.getElementById('from').value != "") {
-      startsAt =
-          "<p class='popup-date-start'>"        +
-          "Starts at: "                         +
-          document.getElementById('from').value +
-          "</p>";
-    }
+      if( document.getElementById('from').value != "") {
+        startsAt =
+            "<p class='popup-date-start'>"        +
+            "Starts at: "                         +
+            document.getElementById('from').value +
+            "</p>";
+      }
 
-    if( document.getElementById('until').value != "") {
-      endsAt =
-          "<p class='popup-date-end'>"           +
-          "Ends at: "                            +
-          document.getElementById('until').value +
-          "</p>"
-    }
+      if( document.getElementById('until').value != "") {
+        endsAt =
+            "<p class='popup-date-end'>"           +
+            "Ends at: "                            +
+            document.getElementById('until').value +
+            "</p>"
+      }
 
-    if(this.imgUrl) {
-      photo =
-          "<div class='img-wrapper'>"         +
-          "<img src='"+ this.imgUrl + "'/>"   +
-          "</div>" ;
-    }
+      if(this.imgUrl) {
+        photo =
+            "<div class='img-wrapper'>"         +
+            "<img src='"+ this.imgUrl + "'/>"   +
+            "</div>" ;
+      }
 
-    var popupContent =
-        "<div class='popup-wrapper'>"             +
+      var popupContent =
+          "<div class='popup-wrapper'>"             +
           "<div class='popup-header'>"            +
-              photo                               +
-            "<div class='popup-header-content'>"  +
-              "<h2 class='popup-title'>"          +
-                document.getElementById('title').value +
-              "</h2>"                             +
-              startsAt                            +
-              endsAt                              +
-            "</div>"                              +
+          photo                               +
+          "<div class='popup-header-content'>"  +
+          "<h2 class='popup-title'>"          +
+          document.getElementById('title').value +
+          "</h2>"                             +
+          startsAt                            +
+          endsAt                              +
+          "</div>"                              +
           "</div>"                                +
           "<div class='popup-content'>"           +
-            "<p class='popup-description'>"       +
-              document.getElementById('event-description').value +
-            "</p>"                                +
+          "<p class='popup-description'>"       +
+          document.getElementById('event-description').value +
+          "</p>"                                +
           "</div>"                                +
-        "</div>";
+          "</div>";
 
-    this.addMarker(this.markersList['flag'].marker.getLatLng(), popupContent, this.markersList['flag'].marker.getLatLng().lat + "" + this.markersList['flag'].marker.getLatLng().lng);
+      this.addMarker(this.flag.getLatLng(), popupContent, this.flag.getLatLng().lat + "" + this.flag.getLatLng().lng);
 
-    this.ajax(this.path + "/addpin", 'post', {
+      this.ajax(this.path + "/addpin", 'post', {
 
-      id:  this.markersList['flag'].marker.getLatLng().lat + "" + this.markersList['flag'].marker.getLatLng().lng,
-      lat: this.markersList['flag'].marker.getLatLng().lat,
-      lng: this.markersList['flag'].marker.getLatLng().lng,
-      title: document.getElementById('title').value,
-      dateFrom: document.getElementById('from').value,
-      dateUntil: document.getElementById('until').value,
-      description: document.getElementById('event-description').value,
-      img: this.imgUrl,
-      author: window.localStorage.getItem('userID')
-    });
+        id:  this.flag.getLatLng().lat + "" + this.flag.getLatLng().lng,
+        lat: this.flag.getLatLng().lat,
+        lng: this.flag.getLatLng().lng,
+        title: document.getElementById('title').value,
+        dateFrom: document.getElementById('from').value,
+        dateUntil: document.getElementById('until').value,
+        description: document.getElementById('event-description').value,
+        img: this.imgUrl,
+        author: window.localStorage.getItem('userID')
+      });
 
-    this.hidePopUp();
+      this.hidePopUp();
 
-    this.mymap.removeLayer(this.markersList['flag'].marker);
-    delete this.markersList['flag'];
+      this.mymap.removeLayer(this.flag);
+      this.flag = null;
+    }
+    else {
+      this.hidePopUp();
+      swal({
+        title: 'You have to log in first',
+        html: $('<div>')
+            .text('login with your facebook account'),
+        animation: false,
+        customClass: 'animated tada'
+      })
+    }
   }
 
   openMenu() {

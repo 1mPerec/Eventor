@@ -13,20 +13,44 @@
 <body>
 
 <div id="sidebar" class="sidebar">
-    <ul>
-        <li id="facebook">log in to facebook</li>
-        <li id="clear">clear markers</li>
+
+    <div id="logedOut">LOGIN</div>
+    <div id="logedIn">
+        <div class="user-header">
+            <span class="side" id="userName">USERNAME</span>
+            <div class="user-ico"></div>
+            <span class="side">EVENTS: <span id="numberOfEvents">99</span></span>
+        </div>
+        <div class="logout" id="logout">LOGOUT</div>
+    </div>
+
+    <div class="sidemenu">
+        <div id="facebook" class="sidemenu-item">
+            <svg enable-background="new 0 0 56.693 56.693" height="56.693px" id="fb" version="1.1" viewBox="0 0 56.693 56.693" width="56.693px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M40.43,21.739h-7.645v-5.014c0-1.883,1.248-2.322,2.127-2.322c0.877,0,5.395,0,5.395,0V6.125l-7.43-0.029  c-8.248,0-10.125,6.174-10.125,10.125v5.518h-4.77v8.53h4.77c0,10.947,0,24.137,0,24.137h10.033c0,0,0-13.32,0-24.137h6.77  L40.43,21.739z"/></svg>
+        </div>
+        <div id="clear" class="sidemenu-item">
+            <span class="clear-ico">
+                <svg id="brush" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><style>.brush{fill:#6994B6;}</style>
+  <path class="brush" d="M447.2 499.5l-22.6-222.1V199c0-6.3-5.1-11.3-11.3-11.3h-71.1c-16.6-5.8-30.8-16.9-40.1-31.3-5-7.7-7.5-14.6-7.5-20.6 0-17.6 5.1-29.9 10-41.7 3.7-8.8 7.2-17.2 8.3-26.9 3.1-26.3-6.6-47.4-27.3-59.4-8.8-5.1-18-7.7-27.2-7.7-.8 0-1.6 0-2.4.1-10.1-.5-20 2.1-29.6 7.7-20.7 12-30.4 33.1-27.3 59.4 1.2 9.8 4.6 18.1 8.3 26.9 4.9 11.8 10 24 10 41.7 0 6-2.5 12.9-7.5 20.6-9.3 14.4-23.6 25.5-40.1 31.3H98.7c-6.3 0-11.3 5.1-11.3 11.3v78.4l-22.6 222c-.3 3.2.7 6.4 2.9 8.7 2.1 2.4 5.2 3.7 8.4 3.7h204.7c4.5 0 8.6-2.7 10.4-6.8l16.5-37.4 19.1 37.9c1.9 3.8 5.8 6.2 10.1 6.2h14.7c4 0 7.6-2.1 9.7-5.5l11.8-19.5 11.8 19.5c2.1 3.4 5.7 5.5 9.7 5.5h41.5c3.2 0 6.3-1.4 8.4-3.7 2-2.2 3-5.4 2.7-8.6zM299.1 187.7h-86.3c6.1-5.6 11.5-12 16.1-19 7.4-11.4 11.1-22.4 11.1-32.9 0-22.2-6.5-37.8-11.8-50.4-3.2-7.7-5.9-14.3-6.7-20.9-2-17.3 3.4-29.8 16.2-37.2 5.9-3.4 11.8-5 17.5-4.6h1.4c5.7-.4 11.6 1.2 17.5 4.6 12.8 7.4 18.2 19.9 16.2 37.2-.8 6.6-3.5 13.2-6.7 20.9-5.1 12.6-11.6 28.2-11.6 50.4 0 10.5 3.7 21.5 11.1 32.9 4.5 7 9.9 13.4 16 19zm102.8 22.6v56.3H110.1v-56.3H401.9zm21.5 279.1h-22.6l-17.5-29v-74.3c0-6.3-5.1-11.3-11.3-11.3s-11.3 5.1-11.3 11.3v77.5l-15.6 25.7h-1.3l-25.5-50.8v-90.2c0-6.3-5.1-11.3-11.3-11.3s-11.3 5.1-11.3 11.3v90.5l-22.2 50.5H88.6l20.4-200h294l20.4 200.1z"/>
+  <path class="brush" d="M318.2 311.1c0-.7-.1-1.5-.2-2.2s-.4-1.4-.7-2.1c-.3-.7-.6-1.3-1-2-.4-.6-.9-1.2-1.4-1.7-.5-.5-1.1-1-1.7-1.4-.6-.4-1.3-.8-2-1-.7-.3-1.4-.5-2.1-.6s-1.5-.2-2.2-.2-1.5.1-2.2.2c-.7.1-1.4.4-2.1.6-.7.3-1.3.6-1.9 1-.6.4-1.2.9-1.7 1.4-.5.5-1 1.1-1.4 1.7-.4.6-.8 1.3-1 2-.3.7-.5 1.4-.6 2.1-.1.7-.2 1.5-.2 2.2 0 .7.1 1.5.2 2.2.1.7.4 1.4.6 2.1.3.7.6 1.3 1 1.9.4.6.9 1.2 1.4 1.7.5.5 1.1 1 1.7 1.4.6.4 1.3.8 1.9 1 .7.3 1.4.5 2.1.6 1.4.3 3 .3 4.4 0 .7-.1 1.4-.4 2.1-.6.7-.3 1.3-.6 2-1 .6-.4 1.2-.9 1.7-1.4.5-.5 1-1.1 1.4-1.7.4-.6.8-1.3 1-1.9.3-.7.5-1.4.7-2.1.2-.7.2-1.5.2-2.2zM383.3 348.8c0-.7-.1-1.5-.2-2.2-.1-.7-.4-1.4-.6-2.1-.3-.7-.6-1.3-1-2-.4-.6-.9-1.2-1.4-1.7-2.1-2.1-5-3.3-8-3.3-.7 0-1.5.1-2.2.2s-1.4.4-2.1.6c-.7.3-1.3.6-2 1.1-.6.4-1.2.9-1.7 1.4-.5.5-1 1.1-1.4 1.7-.4.6-.8 1.3-1 2-.3.7-.5 1.4-.6 2.1s-.2 1.5-.2 2.2c0 .7.1 1.5.2 2.2s.4 1.4.6 2.1c.3.7.6 1.3 1 2 .4.6.9 1.2 1.4 1.7.5.5 1.1 1 1.7 1.4.6.4 1.3.8 2 1 .7.3 1.4.5 2.1.6 1.5.3 3 .3 4.4 0 .7-.1 1.4-.4 2.1-.6.7-.3 1.3-.6 2-1 .6-.4 1.2-.9 1.7-1.4.5-.5 1-1.1 1.4-1.7.4-.6.8-1.3 1-2 .3-.7.5-1.4.6-2.1.1-.8.2-1.5.2-2.2z"/>
+</svg>
+            </span>
+            <span>CLEAR MARKERS</span>
+        </div>
         <label for='bgGeolocation'>
-            <li>background geolocation
+            <div class="sidemenu-item">BACKGROUND GEOLOCATION
                 <div class="switch">
                     <input type="checkbox" id="bgGeolocation">
-                    <div class="slider"></div>
+                    <div class="slider">
+                        <div class="switcher-left-side">ON</div>
+                        <div class="switcher-right-side">OFF</div>
+                    </div>
                 </div>
-            </li>
+            </div>
         </label>
-        <li id="info">info</li>
-        <li id="closeSideMenu">close</li>
-    </ul>
+    </div>
+    <div id="closeSideMenu"></div>
+    <label id="info" class="sidemenu-item">INFO <div id="i">i</div></label>
 </div>
 
     <div class="mapid-wrapper">
@@ -39,42 +63,49 @@
     </div>
 
     <div id="menu">
-        <textarea id="marker-description"></textarea>
-        <a id="options" class="menu-item">Options</a>
-        <a id="save-pin" class="menu-item">Save pin</a>
-        <a id="close-btn" class="menu-item">Cancel</a>
+        <div class="marker-description-wrapper">
+            <input type="text" id="marker-description"/>
+        </div>
+        <div class="menu-items">
+            <a id="options" class="menu-item">OPTIONS</a>
+            <a id="save-pin" class="menu-item">SAVE PIN</a>
+        </div>
+        <a id="close-btn"></a>
     </div>
 
     <div id="overlay">
         <div class="popup">
-            <h2 id="popup-title">Event Options</h2>
+            <div class="close-popup" id="closePopup">X</div>
+            <h2 id="popup-title">EVENT OPTI<span>ONS</span></h2>
             <form id="popup-header">
                 <label id="add-photo">
                     <div id="file-add-ditails">
-                        <svg id="add" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64.11 64.11"><defs><style>.cls-1{fill:#606060;stroke:#424242;stroke-miterlimit:10;}</style></defs><title>add</title><path id="plus-icon" class="cls-1" d="M62.52,23.53H44V5a2.8,2.8,0,0,0-2.8-2.8H26.31A2.8,2.8,0,0,0,23.5,5V23.53H5a2.8,2.8,0,0,0-2.8,2.8V41.25A2.8,2.8,0,0,0,5,44.05H23.5V62.55a2.8,2.8,0,0,0,2.8,2.8H41.23a2.8,2.8,0,0,0,2.8-2.8V44.05H62.52a2.8,2.8,0,0,0,2.8-2.8V26.33A2.8,2.8,0,0,0,62.52,23.53Z" transform="translate(-1.71 -1.74)"/></svg>
-                        <span class="add-img-tag">Add img</span>
+                        <div class="plus-symbol"></div>
+                        <span class="add-img-tag">ADD IMG</span>
                     </div>
                     <img id="popup-file-img"/>
                     <input type="file" id="popup-input-file" accept="image/*" class="input-file"/>
                 </label>
                 <div id="popup-inputs">
-                    <label for="title">Title</label>
-                    <input id="title" type="text"/>
-                    <div class="date-container">
-                        <label for="from">Event starts on
+                    <div class="title-wrapper">
+                        <label for="title">TITLE</label>
+                        <input id="title" type="text" placeholder="EVENT NAME"/>
+                    </div>
+                    <div class="date-wrapper">
+                        <label for="from">START
                             <input type="text" placeholder="dd/mm/yy" id="from">
                         </label>
-                        <label for="until">Event ends on
+                        <label for="until">END
                             <input type="text" placeholder="dd/mm/yy" id="until">
                         </label>
                     </div>
-                    <label for="event-description"></label>
-                    <label for="event-description">Description of the event</label>
-                    <textarea id="event-description"></textarea>
+                    <div class="description-wrapper">
+                        <label for="event-description">DESCRIPTION</label>
+                        <textarea id="event-description" placeholder="TEXT" ></textarea>
+                    </div>
                 </div>
             </form>
-            <button id="create-event">create</button>
-            <button id="cancel">cancel</button>
+            <div id="create">CREATE</div>
         </div>
     </div>
 
