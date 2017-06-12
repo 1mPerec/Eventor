@@ -12,11 +12,14 @@
 
 body {
   width: 100%;
-  height: 100%;
-  overflow: hidden; }
+  height: 100%; }
 
 .sidebar {
   position: fixed;
+  overflow: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding-bottom: 100px;
   top: 0;
   bottom: 0;
   left: -300px;
@@ -68,7 +71,8 @@ body {
     left: 0;
     right: 0;
     text-align: center;
-    cursor: pointer; }
+    cursor: pointer;
+    overflow: hidden; }
     .sidebar #logedIn .logout:before {
       content: '';
       position: absolute;
@@ -84,7 +88,6 @@ body {
   .sidebar .sidemenu {
     padding: 20px 10px;
     padding-top: 70px;
-    overflow: hidden;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-direction: column;
@@ -155,10 +158,9 @@ body {
       cursor: pointer;
       font-size: 20px; }
   .sidebar #info {
-    position: absolute;
-    bottom: 75px;
-    left: 0;
-    right: 0;
+    display: block;
+    padding-bottom: 30px;
+    margin-top: auto;
     color: white;
     text-align: center;
     font-size: 30px;
@@ -193,11 +195,7 @@ body {
     height: 120px;
     background-color: hotpink;
     cursor: pointer;
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    margin: auto;
+    margin-left: auto;
     z-index: 5;
     background: no-repeat right url("images/close-menu.png"); }
 
@@ -761,12 +759,6 @@ body {
       margin-right: -30px;
       margin-bottom: 30px; } }
 
-@media screen and (max-height: 850px) {
-  #sidebar #closeSideMenu {
-    position: relative;
-    margin: 0;
-    margin-left: auto; } }
-
 @media screen and (max-height: 600px) {
   #overlay {
     padding: 15px; }
@@ -803,9 +795,7 @@ body {
       font-size: 30px;
       line-height: 50px; }
   #sidebar #clear {
-    margin: 0; }
-  #sidebar #info {
-    bottom: 20px; } }
+    margin: 0; } }
 
 @media screen and (max-width: 1000px) {
   #menu {

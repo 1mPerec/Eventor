@@ -168,11 +168,9 @@ class App {
           document.getElementById('bgGeolocation').toggle = window.localStorage.getItem('bgGeo');
           document.getElementById('sidebar').className += ' active';
           if(!window.localStorage.getItem('userID')) {
-            console.log('Sup?');
             this.logedOutScreen();
           }
           else {
-            console.log('Sup!');
             this.logedInScreen();
           }
           button.state('closeMenu');
