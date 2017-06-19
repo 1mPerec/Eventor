@@ -266,7 +266,7 @@ class App {
 
         // TODO finish off
 
-        if(window.localStorage.getItem('userID')) {
+        // if(window.localStorage.getItem('userID')) {
 
           this.timer = setTimeout(() => {
 
@@ -288,16 +288,16 @@ class App {
 
           this.openMenu();
 
-        }
-        else {
-          swal({
-            title: 'You have to log in first',
-            html: $('<div>')
-                .text('login with your facebook account'),
-            animation: false,
-            customClass: 'animated tada'
-          })
-        }
+        // }
+        // else {
+        //   swal({
+        //     title: 'You have to log in first',
+        //     html: $('<div>')
+        //         .text('login with your facebook account'),
+        //     animation: false,
+        //     customClass: 'animated tada'
+        //   })
+        // }
 
       } else {
 
@@ -643,35 +643,32 @@ class App {
 
   authFacebook() {
 
-    if(!window.localStorage.getItem('userID')) {
+    facebookConnectPlugin.login(['public_profile'], (data) => {
 
-      facebookConnectPlugin.login(['public_profile'], (data) => {
+      facebookConnectPlugin.api('me/?fields=id,name', ['public_profile'], (res) => {
 
-        facebookConnectPlugin.api('me/?fields=id,name', ['public_profile'], (res) => {
+          window.localStorage.setItem('userID', res.id);
+          window.localStorage.setItem('userName', res.name);
 
-              window.localStorage.setItem('userID', res.id);
-              window.localStorage.setItem('userName', res.name);
+          this.ajax(this.path + '/adduser', 'post', {
+            userID: res.id,
+            name: res.name
+          }).then((res) => {
 
-              this.ajax(this.path + '/adduser', 'post', {
-                userID: res.id,
-                name: res.name
-              }).then((res) => {
+            window.localStorage.setItem('authToken', res.token);
 
-                window.localStorage.setItem('authToken', res.token);
+            this.placePins();
+            this.logedInScreen();
+          });
 
-                this.placePins();
-                this.logedInScreen();
-              });
+        },
+        (error) => {
+          console.log('error', error);
 
-            },
-            (error) => {
-              console.log('error', error);
-
-            });
-      }, (error) => {
-        console.log('error', error);
-      });
-    }
+        });
+    }, (error) => {
+      console.log('error', error);
+    });
   }
 
   logoutFacebook() {

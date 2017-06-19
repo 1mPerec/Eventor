@@ -267,7 +267,6 @@ body {
 		right: 0;
 		width: 60px;
 		height: 120px;
-		background-color: hotpink;
 		cursor: pointer;
 		margin-left: auto;
 		z-index: 5;
@@ -286,7 +285,6 @@ body {
 	bottom: 0;
 	background-color: $popupColor;
 	padding: 0;
-	padding-right: 90px;
 	box-shadow: 0 -5px 5px -5px #333;
 
 
@@ -341,6 +339,7 @@ body {
 		align-items: center;
 		-ms-flex-pack: distribute;
 		justify-content: space-around;
+		padding-right: 90px;
 
 		.menu-item {
 			height: 60px;
@@ -1095,8 +1094,6 @@ body {
 	#menu {
 		-ms-flex-direction: column;
 		flex-direction: column;
-		padding: 0 50px;
-		padding-right: 90px;
 
 		&.active {
 			height: 150px;
@@ -1109,11 +1106,14 @@ body {
 			display: flex;
 			-ms-flex-align: center;
 			align-items: center;
+			padding-left: 25px;
+			padding-right: 90px;
 		}
 
 		.menu-items {
 			width: 100%;
 			height: 50%;
+			padding: 0;
 		}
 
 		#close-btn {
@@ -1127,8 +1127,6 @@ body {
 @media screen and (max-width: 600px) {
 
 	#menu{
-		padding: 0 10px;
-		padding-right: 90px;
 
 		.menu-items {
 
