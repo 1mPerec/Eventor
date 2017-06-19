@@ -250,7 +250,7 @@ class App {
 
     document
         .getElementById('info')
-        .addEventListener('click', this.toggleInfo.bind(this));
+        .addEventListener('click', this.info.bind(this));
 
     document
         .getElementById('closeSideMenu')
@@ -626,8 +626,6 @@ class App {
 
   }
 
-
-
   authFacebook() {
 
     if(!window.localStorage.getItem('userID')) {
@@ -687,6 +685,17 @@ class App {
     };
 
     reader.readAsDataURL(file);
+  }
+
+  info() {
+    swal({
+      title: 'info',
+      html: $('<div>')
+          .addClass('info-note')
+          .text('This app is designed to help thous who want to be reminded when they reach a certain location. It also can notify you when you walk nearby some cool event, that you might be interested in!'),
+      animation: false,
+      customClass: 'animated pulse'
+    })
   }
 
   createCustomPin(event) {
