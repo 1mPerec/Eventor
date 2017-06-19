@@ -264,25 +264,40 @@ class App {
 
       if (this.clicks === 1) {
 
-        this.timer = setTimeout(() => {
+        // TODO finish off
 
-          var flag = L.marker(e.latlng).addTo(this.mymap);
-          flag.id = 'flag';
-          flag.setIcon(this.FlagIco);
+        if(window.localStorage.getItem('userID')) {
 
-          if (this.flag) {
-            this.mymap.removeLayer(this.flag);
-          }
+          this.timer = setTimeout(() => {
 
-          this.flag = flag;
+            var flag = L.marker(e.latlng).addTo(this.mymap);
+            flag.id = 'flag';
+            flag.setIcon(this.FlagIco);
 
-          document.getElementById('marker-description').focus();
+            if (this.flag) {
+              this.mymap.removeLayer(this.flag);
+            }
 
-          this.clicks = 0;             //after action performed, reset counter
+            this.flag = flag;
 
-        }, this.DELAY);
+            document.getElementById('marker-description').focus();
 
-        this.openMenu();
+            this.clicks = 0;             //after action performed, reset counter
+
+          }, this.DELAY);
+
+          this.openMenu();
+
+        }
+        else {
+          swal({
+            title: 'You have to log in first',
+            html: $('<div>')
+                .text('login with your facebook account'),
+            animation: false,
+            customClass: 'animated tada'
+          })
+        }
 
       } else {
 
@@ -678,7 +693,7 @@ class App {
 
     reader.onloadend = () => {
       document.getElementById('popup-file-img').style.backgroundImage = 'url("' + reader.result + '")';
-      document.getElementById('popup-file-img').style.backgroundRepeat = "repeat-y";
+      document.getElementById('popup-file-img').style.backgroundRepeat = "no-repeat";
       document.getElementById('popup-file-img').style.backgroundPosition = "center";
       document.getElementById('file-add-ditails').className = 'hidden';
       this.imgUrl = reader.result;
