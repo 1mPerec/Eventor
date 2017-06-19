@@ -320,10 +320,12 @@ class App {
 
 }
 
-  outputDateFrom() {
+  outputDateFrom(event) {
+    event.preventDefault();
     this.calendarOutput('from');
   }
-  outputDateUntil() {
+  outputDateUntil(event) {
+    event.preventDefault();
     this.calendarOutput('until');
   }
 
@@ -642,8 +644,6 @@ class App {
                 name: res.name
               }).then((res) => {
 
-                console.log(res.token);
-
                 window.localStorage.setItem('authToken', res.token);
 
                 this.placePins();
@@ -679,7 +679,9 @@ class App {
     const file = event.target.files[0];
 
     reader.onloadend = () => {
-      document.getElementById('popup-file-img').src = reader.result;
+      document.getElementById('popup-file-img').style.backgroundImage = 'url("' + reader.result + '")';
+      document.getElementById('popup-file-img').style.backgroundRepeat = "repeat-y";
+      document.getElementById('popup-file-img').style.backgroundPosition = "center";
       document.getElementById('file-add-ditails').className = 'hidden';
       this.imgUrl = reader.result;
     };

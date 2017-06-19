@@ -17,9 +17,9 @@
     <div id="logedOut">LOGIN</div>
     <div id="logedIn">
         <div class="user-header">
-            <span class="side" id="userName">USERNAME</span>
+            <span class="side" id="userName"></span>
             <div class="user-ico"></div>
-            <span class="side">EVENTS: <span id="numberOfEvents">99</span></span>
+            <span class="side">EVENTS: <span id="numberOfEvents"></span></span>
         </div>
         <div class="logout" id="logout">LOGOUT</div>
     </div>
@@ -48,8 +48,8 @@
                 </div>
             </div>
         </label>
+        <div id="closeSideMenu"></div>
     </div>
-    <div id="closeSideMenu"></div>
     <label id="info" class="sidemenu-item">INFO <div id="i">i</div></label>
 </div>
 
@@ -77,35 +77,37 @@
         <div class="popup">
             <div class="close-popup" id="closePopup">X</div>
             <h2 id="popup-title">EVENT OPTI<span>ONS</span></h2>
-            <form id="popup-header">
-                <label id="add-photo">
-                    <div id="file-add-ditails">
-                        <div class="plus-symbol"></div>
-                        <span class="add-img-tag">ADD IMG</span>
+            <div class="form-wrapper">
+                <form id="popup-header">
+                    <label id="add-photo">
+                        <div id="file-add-ditails">
+                            <div class="plus-symbol"></div>
+                            <span class="add-img-tag">ADD IMG</span>
+                        </div>
+                        <div id="popup-file-img"></div>
+                        <input type="file" id="popup-input-file" accept="image/*" class="input-file"/>
+                    </label>
+                    <div id="popup-inputs">
+                        <div class="title-wrapper">
+                            <label for="title">TITLE</label>
+                            <input id="title" type="text" placeholder="EVENT NAME"/>
+                        </div>
+                        <div class="date-wrapper">
+                            <label for="from">START
+                                <input type="text" placeholder="dd/mm/yy" id="from">
+                            </label>
+                            <label for="until">END
+                                <input type="text" placeholder="dd/mm/yy" id="until">
+                            </label>
+                        </div>
+                        <div class="description-wrapper">
+                            <label for="event-description">DESCRIPTION</label>
+                            <textarea id="event-description" placeholder="TEXT" ></textarea>
+                        </div>
                     </div>
-                    <img id="popup-file-img"/>
-                    <input type="file" id="popup-input-file" accept="image/*" class="input-file"/>
-                </label>
-                <div id="popup-inputs">
-                    <div class="title-wrapper">
-                        <label for="title">TITLE</label>
-                        <input id="title" type="text" placeholder="EVENT NAME"/>
-                    </div>
-                    <div class="date-wrapper">
-                        <label for="from">START
-                            <input type="text" placeholder="dd/mm/yy" id="from">
-                        </label>
-                        <label for="until">END
-                            <input type="text" placeholder="dd/mm/yy" id="until">
-                        </label>
-                    </div>
-                    <div class="description-wrapper">
-                        <label for="event-description">DESCRIPTION</label>
-                        <textarea id="event-description" placeholder="TEXT" ></textarea>
-                    </div>
-                </div>
-            </form>
-            <div id="create">CREATE</div>
+                </form>
+                <div id="create">CREATE</div>
+            </div>
         </div>
     </div>
 

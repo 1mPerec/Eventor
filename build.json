@@ -1,0 +1,10 @@
+{
+  "ios": {
+    "debug": {
+      "developmentTeam": "ring4@inbox.ru"
+    },
+    "release": {
+      "developmentTeam": "ring4@inbox.ru"
+    }
+  }
+}
