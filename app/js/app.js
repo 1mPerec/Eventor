@@ -137,6 +137,7 @@ class App {
 
   logedInScreen() {
     document.getElementById('logedIn').style.display = 'block';
+    document.getElementById('logout').style.display = 'block';
     document.getElementById('logedOut').style.display = 'none';
     document.getElementById('facebook').style.display = 'none';
     document.getElementById('userName').innerHTML = window.localStorage.getItem('userName');
@@ -144,6 +145,7 @@ class App {
   }
   logedOutScreen() {
     document.getElementById('logedIn').style.display = 'none';
+    document.getElementById('logout').style.display = 'none';
     document.getElementById('logedOut').style.display = 'block';
     document.getElementById('facebook').style.display = 'block';
   }
